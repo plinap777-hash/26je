@@ -1,0 +1,1148 @@
+
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>스트레스 타파 2차</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pinkLight1: '#FFE6EB',
+                        pinkLight2: '#FFD1DC',
+                        pinkMain1: '#FF8EA5',
+                        pinkMain2: '#FF6B8B',
+                        pinkDark: '#D84B68',
+                    },
+                    fontFamily: {
+                        sans: ['"Gowun Dodum"', '"Noto Sans KR"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'pink-soft': '0 10px 25px -5px rgba(255, 107, 139, 0.3), 0 8px 10px -6px rgba(255, 142, 165, 0.2)',
+                        'pink-glow': '0 0 20px rgba(255, 107, 139, 0.6)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #FFE6EB 0%, #FFD1DC 50%, #FFC2D1 100%);
+            height: 100vh;
+            max-height: 100vh;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 142, 165, 0.4);
+        }
+
+        @keyframes subtleFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        .animate-float {
+            animation: subtleFloat 3.5s ease-in-out infinite;
+        }
+
+        .hero-title-container {
+            min-height: 32vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-title-line {
+            font-size: clamp(2.2rem, 5.8vw, 4.2rem);
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+            white-space: nowrap;
+            word-break: keep-all;
+            text-shadow: 0 8px 20px rgba(255, 107, 139, 0.3);
+        }
+
+        /* 2D Game Canvas */
+        #gameCanvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+
+
+
+    <!-- Header -->
+    <header class="w-full max-w-4xl mx-auto p-4 flex justify-between items-center z-20 flex-shrink-0">
+        <div class="flex items-center space-x-2 cursor-pointer" onclick="goHome()">
+            <div class="w-10 h-10 rounded-full bg-pinkMain2 text-white flex items-center justify-center shadow-md">
+                <i class="fa-solid fa-chess-rook text-xl"></i>
+            </div>
+            <span class="font-bold text-lg text-pinkDark tracking-tight hidden sm:inline">스트레스 타파!</span>
+        </div>
+    </header>
+
+    <!-- Main View Area -->
+    <main class="w-full max-w-4xl mx-auto px-4 my-auto flex flex-col items-center justify-center relative z-10 flex-1 overflow-hidden h-full">
+
+        <!-- 메인 화면 -->
+        <section id="screen-main" class="w-full flex flex-col items-center text-center space-y-8 py-2 my-auto">
+            <div class="w-full max-w-2xl hero-title-container animate-float">
+                <div class="glass-card w-full py-8 px-6 sm:px-10 rounded-3xl shadow-pink-soft border-4 border-pinkMain1 flex flex-col items-center justify-center space-y-2">
+                    <h1 class="hero-title-line font-black text-pinkDark">
+                        스트레스 타파
+                    </h1>
+                    <h2 class="hero-title-line font-black text-pinkMain2">
+                        학습 타워!
+                    </h2>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4 w-full max-w-xs sm:max-w-md">
+                <button onclick="showScreen('screen-select')" class="w-full py-4 px-6 bg-gradient-to-r from-pinkMain1 to-pinkMain2 text-white font-extrabold text-xl rounded-2xl shadow-pink-soft hover:scale-105 transition transform active:scale-95 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-play"></i> 시작하기
+                </button>
+                <button onclick="showScreen('screen-explain')" class="w-full py-4 px-6 bg-white/90 text-pinkDark font-extrabold text-xl border-2 border-pinkMain1 rounded-2xl shadow-sm hover:bg-pinkLight1 hover:scale-105 transition transform active:scale-95 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-circle-question"></i> 설명
+                </button>
+            </div>
+        </section>
+
+        <!-- 설명 페이지 -->
+        <section id="screen-explain" class="hidden w-full max-w-md flex flex-col items-center text-center py-2 my-auto">
+            <div class="glass-card w-full p-5 sm:p-6 rounded-3xl shadow-pink-soft border-2 border-pinkMain1 flex flex-col justify-between max-h-[85vh] overflow-y-auto">
+                <div>
+                    <div class="w-10 h-10 bg-pinkLight1 rounded-full mx-auto flex items-center justify-center text-pinkMain2 text-xl mb-2 border border-pinkMain1">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-pinkDark mb-3">게임 설명</h2>
+                    
+                    <div class="bg-white/90 p-3.5 rounded-2xl border border-pinkMain1/50 text-gray-800 text-xs sm:text-sm leading-relaxed mb-3 font-semibold shadow-inner text-left">
+                        💡 <strong>왁뿌, 슬랑이, 키캡</strong> 발판을 밟으면 각 발판에 맞는 오리지널 ASMR 소리가 납니다!<br>
+                        발판 5개를 오를 때마다 관문 퀴즈 3문제를 풀어야 다음으로 올라갈 수 있으며, 100번째 발판 정상에 도달하면 축하 폭죽이 터집니다!
+                    </div>
+
+                    <div class="bg-pinkLight1/80 p-3 rounded-2xl border border-pinkMain1 text-pinkDark text-xs leading-relaxed mb-3 font-bold shadow-inner text-left">
+                        🎮 <strong>조작 방법:</strong><br>
+                        • <strong>PgUp / ↑</strong>: 앞으로 직진<br>
+                        • <strong>Home / ←</strong>: 왼쪽 이동<br>
+                        • <strong>End / →</strong>: 오른쪽 이동<br>
+                        • <strong>Space (스페이스바)</strong>: 점프
+                    </div>
+                </div>
+
+                <button onclick="goHome()" class="w-full py-3 px-6 bg-gradient-to-r from-pinkMain1 to-pinkMain2 text-white font-extrabold text-base rounded-2xl shadow-md hover:scale-105 transition transform active:scale-95 flex items-center justify-center gap-2 mt-2">
+                    <i class="fa-solid fa-house"></i> 홈으로
+                </button>
+            </div>
+        </section>
+
+        <!-- 과목 선택 화면 -->
+        <section id="screen-select" class="hidden w-full max-w-xl flex flex-col items-center text-center space-y-4 py-4 my-auto">
+            <div class="glass-card w-full p-6 rounded-3xl shadow-pink-soft border-2 border-pinkMain1">
+                <h2 class="text-2xl sm:text-3xl font-black text-pinkDark mb-2">문제 선택</h2>
+                <p class="text-xs sm:text-sm text-gray-600 mb-6 font-medium">학습하고자 하는 과목을 선택해주세요!</p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                    <div onclick="startGame('history')" class="group cursor-pointer bg-white/90 p-5 rounded-2xl border-2 border-pinkMain1 hover:border-pinkMain2 hover:bg-pinkLight1 transition transform hover:-translate-y-1 flex flex-col items-center">
+                        <div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl mb-2 shadow-sm">
+                            <i class="fa-solid fa-landmark"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-800">역사</h3>
+                        <p class="text-[11px] text-gray-500 mt-0.5">역사 상식 15문제</p>
+                    </div>
+
+                    <div onclick="startGame('english')" class="group cursor-pointer bg-white/90 p-5 rounded-2xl border-2 border-pinkMain1 hover:border-pinkMain2 hover:bg-pinkLight1 transition transform hover:-translate-y-1 flex flex-col items-center">
+                        <div class="w-14 h-14 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-2xl mb-2 shadow-sm">
+                            <i class="fa-solid fa-language"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-800">영어</h3>
+                        <p class="text-[11px] text-gray-500 mt-0.5">영어 어휘 15문제</p>
+                    </div>
+
+                    <div onclick="startGame('ai')" class="group cursor-pointer bg-white/90 p-5 rounded-2xl border-2 border-pinkMain1 hover:border-pinkMain2 hover:bg-pinkLight1 transition transform hover:-translate-y-1 flex flex-col items-center">
+                        <div class="w-14 h-14 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-2xl mb-2 shadow-sm">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-800">AI</h3>
+                        <p class="text-[11px] text-gray-500 mt-0.5">인공지능 지식 15문제</p>
+                    </div>
+                </div>
+
+                <button onclick="goHome()" class="py-2.5 px-6 bg-white border border-pinkMain1 text-pinkDark font-bold text-xs rounded-xl hover:bg-pinkLight1 transition">
+                    <i class="fa-solid fa-arrow-left"></i> 홈으로 돌아가기
+                </button>
+            </div>
+        </section>
+
+        <!-- 게임 진행 화면 -->
+        <section id="screen-game" class="hidden w-full h-full relative flex flex-col items-center justify-center overflow-hidden rounded-3xl border-4 border-pinkMain1 shadow-pink-soft">
+            
+            <!-- 상단 플로팅 막대 (HUD) -->
+            <div class="absolute top-4 left-4 right-4 z-20 glass-card px-4 py-2.5 rounded-full shadow-md flex justify-between items-center border border-pinkMain1/60">
+                <div class="flex items-center gap-3">
+                    <span id="game-cat-badge" class="px-3 py-1 bg-pinkMain2 text-white text-xs font-black rounded-full shadow-sm">역사</span>
+                    <span class="text-xs sm:text-sm font-extrabold text-pinkDark flex items-center gap-1">
+                        🚩 발판: <span id="platform-step-count" class="text-pinkMain2 font-black text-base">0</span> / 100
+                    </span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-xs sm:text-sm font-bold text-gray-700">⭐ 정답: <span id="quiz-solved-count" class="text-pinkMain2 font-extrabold">0</span> / 15</span>
+                    <button onclick="goHome()" class="px-3 py-1 bg-white hover:bg-pinkLight1 border border-pinkMain1 text-pinkDark text-xs font-bold rounded-full transition shadow-sm flex items-center gap-1">
+                        <i class="fa-solid fa-house"></i> 메인
+                    </button>
+                </div>
+            </div>
+
+            <!-- 2D 게임 캔버스 -->
+            <div class="w-full h-full relative bg-slate-900 overflow-hidden">
+                <canvas id="gameCanvas"></canvas>
+            </div>
+
+            <!-- 5발판 등반 시 팝업되는 포스트잇 퀴즈 카드 -->
+            <div id="quiz-post-overlay" class="hidden absolute z-30 inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 animate-fade-in">
+                <div class="glass-card w-full max-w-md p-6 rounded-3xl shadow-pink-glow border-4 border-pinkMain1 bg-white/95 flex flex-col justify-between transform transition-all scale-100">
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-xs font-extrabold text-pinkMain2 bg-pinkLight1 px-3 py-1 rounded-full border border-pinkMain1">
+                                🔒 관문 퀴즈 (<span id="quiz-gate-progress">1</span>/3)
+                            </span>
+                            <span class="text-xs font-bold text-gray-500">
+                                전체 진행: <span id="quiz-total-index">1</span>/15
+                            </span>
+                        </div>
+                        <h3 id="quiz-question" class="text-sm sm:text-base font-bold text-gray-800 leading-snug my-3 min-h-[50px]">
+                            퀴즈 문제 불러오는 중...
+                        </h3>
+                    </div>
+
+                    <div id="quiz-options" class="space-y-2 my-2"></div>
+                    <div id="quiz-feedback" class="hidden p-2.5 rounded-2xl text-center text-xs font-extrabold mt-2"></div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- 추락 모달 Popup -->
+        <div id="modal-fall" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+            <div class="glass-card w-full max-w-sm p-6 rounded-3xl shadow-pink-glow border-4 border-pinkMain2 text-center">
+                <div class="w-16 h-16 bg-red-100 text-red-500 rounded-full mx-auto flex items-center justify-center text-3xl mb-3 shadow-md">
+                    <i class="fa-solid fa-person-falling"></i>
+                </div>
+                <h2 class="text-2xl font-black text-pinkDark mb-1">아차! 바닥으로 떨어졌어요!</h2>
+                <p class="text-xs text-gray-600 mb-5 font-semibold">발판 사이의 틈새로 떨어졌습니다.</p>
+
+                <div class="flex flex-col gap-2.5">
+                    <button onclick="restartGame()" class="w-full py-3 px-4 bg-gradient-to-r from-pinkMain1 to-pinkMain2 text-white font-extrabold text-sm rounded-xl shadow-md hover:scale-105 transition transform active:scale-95 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-arrow-up"></i> 떨어진 곳부터 다시 시작
+                    </button>
+                    <button onclick="goHome()" class="w-full py-2.5 px-4 bg-white text-pinkDark font-bold text-xs border border-pinkMain1 rounded-xl hover:bg-pinkLight1 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-house"></i> 홈으로
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 100칸 도달 정복 / 승리 완료 모달 -->
+        <div id="modal-victory" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
+            <div class="glass-card w-full max-w-md p-6 sm:p-8 rounded-3xl shadow-pink-glow border-4 border-pinkMain2 text-center animate-float relative overflow-hidden">
+                <div class="w-20 h-20 bg-gradient-to-tr from-yellow-400 to-pinkMain1 rounded-full mx-auto flex items-center justify-center text-white text-4xl mb-3 shadow-lg">
+                    <i class="fa-solid fa-crown"></i>
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-black text-pinkDark mb-1">100칸 정상 도착!</h2>
+                <p class="text-xs sm:text-sm text-gray-600 mb-6 font-bold">🎉 모든 발판을 정복하셨습니다! 축하합니다! 🎉</p>
+
+                <div class="flex flex-col gap-3">
+                    <button onclick="showScreen('screen-select')" class="w-full py-3.5 px-4 bg-gradient-to-r from-pinkMain1 to-pinkMain2 text-white font-black text-sm sm:text-base rounded-2xl shadow-md hover:scale-105 transition transform active:scale-95 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-list-check"></i> 다른 문제 풀기
+                    </button>
+                    <button onclick="goHome()" class="w-full py-3 px-4 bg-white text-pinkDark font-extrabold text-sm rounded-2xl border-2 border-pinkMain1 hover:bg-pinkLight1 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-house"></i> 홈으로 (메인 화면)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 정복 완료 화면 -->
+        <section id="screen-result" class="hidden w-full max-w-md flex flex-col items-center text-center py-4 my-auto">
+            <div class="glass-card w-full p-6 sm:p-8 rounded-3xl shadow-pink-glow border-2 border-pinkMain2 relative overflow-hidden animate-float">
+                <div class="w-16 h-16 bg-gradient-to-tr from-pinkMain1 to-pinkMain2 rounded-full mx-auto flex items-center justify-center text-white text-3xl mb-3 shadow-lg">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <h2 class="text-2xl font-black text-pinkDark mb-1">15문제 정복 완료!</h2>
+                <p class="text-xs text-gray-600 mb-5 font-semibold">모든 문제를 맞춰 성공적으로 타워를 완성했습니다!</p>
+
+                <div class="bg-white/90 p-4 rounded-2xl border border-pinkMain1 mb-5 space-y-2 shadow-inner">
+                    <div class="flex justify-between items-center text-xs font-semibold border-b pb-1.5 border-gray-100">
+                        <span class="text-gray-500">완료 과목</span>
+                        <span id="result-cat-text" class="font-extrabold text-pinkDark">역사</span>
+                    </div>
+                    <div class="flex justify-between items-center text-xs font-semibold">
+                        <span class="text-gray-500">풀어낸 문제 수</span>
+                        <span class="text-lg font-black text-pinkMain2">15 / 15 문제</span>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-2.5">
+                    <button onclick="continueEndlessMode()" class="w-full py-3 px-4 bg-gradient-to-r from-pinkMain1 to-pinkMain2 text-white font-extrabold text-sm rounded-xl shadow-md hover:scale-105 transition transform active:scale-95 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-forward"></i> 계속하기 (점프맵 끝없이 계속)
+                    </button>
+                    <button onclick="showScreen('screen-select')" class="w-full py-3 px-4 bg-white text-pinkDark font-extrabold text-sm border-2 border-pinkMain1 rounded-xl hover:bg-pinkLight1 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-list-check"></i> 다른 문제 풀기
+                    </button>
+                    <button onclick="goHome()" class="w-full py-2.5 px-4 bg-white/80 text-gray-700 font-bold text-xs border border-gray-300 rounded-xl hover:bg-gray-100 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-house"></i> 홈으로 (메인 화면)
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="w-full py-2 text-center text-[11px] text-pinkDark/70 font-bold">
+        스트레스 타파 학습 타워! &copy; 2026. All rights reserved.
+    </footer>
+
+    <script>
+        const quizDB = {
+            history: [
+                { q: "1. 우리나라 최초의 국가로 알려진 나라는?", options: ["고조선", "조선", "고려"], answer: 0 },
+                { q: "2. 훈민정음은 오늘날 무엇의 바탕이 되었을까요?", options: ["영어", "한글", "한자"], answer: 1 },
+                { q: "3. 비가 얼마나 내렸는지 측정하는 기구는?", options: ["측우기", "거북선", "나침반"], answer: 0 },
+                { q: "4. 임진왜란 때 활약한 인물은?", options: ["이순신", "세종대왕", "왕건"], answer: 0 },
+                { q: "5. 고구려를 세운 사람은?", options: ["주몽", "왕건", "이성계"], answer: 0 },
+                { q: "6. 백제를 세운 인물은?", options: ["세종대왕", "온조", "주몽"], answer: 1 },
+                { q: "7. 고려시대에 만든 유명한 문화유산은?", options: ["측우기", "팔만대장경", "금관"], answer: 1 },
+                { q: "8. 구석기 시대 사람들은 주로 무엇을 하며 살았을까요?", options: ["사냥과 채집", "벽돌로 집짓기", "공장일"], answer: 0 },
+                { q: "9. 신석기 시대 사람들은 무엇을 하기 시작했을까요?", options: ["밥 사먹기", "농사짓기", "기차타기"], answer: 1 },
+                { q: "10. 옛날사람들이 도구를 만들때 사용하지 않았던 것은?", options: ["돌", "철", "플라스틱"], answer: 2 },
+                { q: "11. 이성계는 조선을 세웠다.", options: ["O", "X"], answer: 0 },
+                { q: "12. 불은 신석기 시대에 최초로 발견되었다.", options: ["O", "X"], answer: 1 },
+                { q: "13. 조선은 삼국시대에 속한다.", options: ["O", "X"], answer: 1 },
+                { q: "14. 측우기는 비의 양을 측정하는 기구이다.", options: ["O", "X"], answer: 0 },
+                { q: "15. 단군왕검은 고조선을 세웠다.", options: ["O", "X"], answer: 0 }
+            ],
+            english: [
+                { q: "1. b는 B의 소문자 일까요? D의 소문자 일까요?", options: ["B", "D"], answer: 0 },
+                { q: "2. Give의 뜻은?", options: ["사다", "받다", "주다"], answer: 2 },
+                { q: "3. happy의 뜻은?", options: ["행복하다.", "행복한", "행복했다."], answer: 1 },
+                { q: "4. 봄은 영어로 무엇일까요?", options: ["string", "sprin", "spring"], answer: 2 },
+                { q: "5. 숫자 3은 영어로 어떻게 쓸까요?", options: ["three", "sree", "tree"], answer: 0 },
+                { q: "6. 알파벳은 총 몇개 일까요?", options: ["24개", "26개", "20개"], answer: 1 },
+                { q: "7. 9월은 영어로 무엇일까요?", options: ["september", "September", "Saptamber"], answer: 1 },
+                { q: "8. 태극기에 들어가지 않는 색은?", options: ["red", "black", "green"], answer: 2 },
+                { q: "9. 부모님은 영어로?", options: ["grandparents", "child", "parents"], answer: 2 },
+                { q: "10. safe의 발음은?", options: ["세이프", "세페", "세프"], answer: 0 },
+                { q: "11. 유치원생들은 영어를 못한다.", options: ["O", "X"], answer: 1 },
+                { q: "12. 문장의 첫번째 알파벳은 대문자로 써야한다.", options: ["O", "X"], answer: 0 },
+                { q: "13. play는 연주하다라는 뜻이다.", options: ["O", "X"], answer: 0 },
+                { q: "14. 안녕은 영어로 hellow이다.", options: ["O", "X"], answer: 1 },
+                { q: "15. fish는 s가 꼭 붙어야 복수가 된다.", options: ["O", "X"], answer: 1 }
+            ],
+            ai: [
+                { q: "1. html의 뜻은?", type: "subjective", answer: ["웹페이지의 뼈대", "구조의 기본", "웹페이지의 뼈대, 구조의 기본", "웹페이지의 뼈대 구조의 기본"] },
+                { q: "2. AI의 뜻은?", type: "subjective", answer: "인공적인 지능" },
+                { q: "3. 엔트리와 스크래치, 마이크로 비트 등의 코딩들은 무슨 코딩 일까요?", type: "subjective", answer: "블록코딩" },
+                { q: "4. AI를 한국어로 번역하면?", type: "subjective", answer: "인공지능" },
+                { q: "5. 전의초 영재 학급의 풀네임은?", type: "subjective", answer: "전의초등학교 인공지능 정보 영재" },
+                { q: "6. AI가 언제 공식적으로 생겼나요?", type: "subjective", answer: "1956년" },
+                { q: "7. 전의초의 영재 학급은 언제 처음으로 생겼나요?", type: "subjective", answer: "2024년" },
+                { q: "8. 인공지능은 감정을 느낄 수 있다.", options: ["O", "X"], answer: 1 },
+                { q: "9. 인공지능은 스스로 공부하고 발전할 수 있다.", options: ["O", "X"], answer: 0 },
+                { q: "10. 인공지능이 만든 결과물은 항상 100% 정확하고 틀린 정보가 없다.", options: ["O", "X"], answer: 1 },
+                { q: "11. AI로 사람의 얼굴이나 목소리를 합성하는 것은 문제가 되지 않는다.", options: ["O", "X"], answer: 1 },
+                { q: "12. 사용자가 AI에게 하는 명령어를 프롬프트 라고 한다.", options: ["O", "X"], answer: 0 },
+                { q: "13. 자율주행은 AI에 포함되지 않는다.", options: ["O", "X"], answer: 1 },
+                { q: "14. 학습 데이터에 특정 성별, 인종, 지역 등의 편견이 포함되어 있으면 AI가 차별적이고 편향된 결과를 생성하는 것을 데이터 편향성 이라고 한다.", options: ["O", "X"], answer: 0 },
+                { q: "15. AI는 성인만 사용할 수 있다.", options: ["O", "X"], answer: 1 }
+            ]
+        };
+
+        let currentSubject = 'history';
+        let floorSteps = 0;
+        let solvedQuizTotal = 0; // 총 맞춘 문제 수 (0~15)
+        let gateQuizCount = 0;    // 현재 관문에서 맞춘 문제 수 (0~3)
+        let isGateActive = false;
+        let isGameOver = false;
+        let isEndlessMode = false;
+        let isOptionLocked = false; // 답 선택 중복 클릭 방지 락
+
+        // Audio ASMR Synthesizer
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // 1번: 왁뿌 (ASMR 왁스 코팅 바사삭/쫀득 터지는 소리)
+        // 2번: 슬랑이 (ASMR 버터 슬라임 쫀득 촙촙 소리)
+        // 3번: 키캡 (ASMR 기계식 키보드 스위치 또각 소리)
+        function playStepSound(type) {
+            initAudio();
+            if (!audioCtx) return;
+
+            const t = audioCtx.currentTime;
+
+            if (type === 'wakp') { // 1. 왁뿌 소리 (왁스 코팅 톡 오프닝 + 버블 크랙)
+                const osc = audioCtx.createOscillator();
+                const g = audioCtx.createGain();
+                
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(120, t);
+                osc.frequency.exponentialRampToValueAtTime(380, t + 0.04);
+                osc.frequency.exponentialRampToValueAtTime(80, t + 0.12);
+
+                g.gain.setValueAtTime(0.35, t);
+                g.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
+
+                osc.connect(g);
+                g.connect(audioCtx.destination);
+                osc.start(t);
+                osc.stop(t + 0.15);
+
+                // 톡 터지는 고음 팝핑 하모닉
+                const popOsc = audioCtx.createOscillator();
+                const popG = audioCtx.createGain();
+                popOsc.type = 'sine';
+                popOsc.frequency.setValueAtTime(850, t + 0.02);
+                popOsc.frequency.exponentialRampToValueAtTime(220, t + 0.08);
+
+                popG.gain.setValueAtTime(0.25, t + 0.02);
+                popG.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
+
+                popOsc.connect(popG);
+                popG.connect(audioCtx.destination);
+                popOsc.start(t + 0.02);
+                popOsc.stop(t + 0.10);
+
+            } else if (type === 'slang') { // 2. 슬랑이 소리 (버터 슬라임 촙촙 소리)
+                const bufferSize = audioCtx.sampleRate * 0.08;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'bandpass';
+                filter.frequency.setValueAtTime(900, t);
+                filter.Q.setValueAtTime(3.0, t);
+
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.3, t);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+                noise.start(t);
+
+            } else if (type === 'keycap') { // 3. 키캡 소리 (기계식 키보드 또각 스위치)
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(1100, t);
+                osc.frequency.exponentialRampToValueAtTime(300, t + 0.03);
+
+                gain.gain.setValueAtTime(0.2, t);
+                gain.gain.exponentialRampToValueAtTime(0.001, t + 0.035);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(t);
+                osc.stop(t + 0.04);
+            }
+        }
+
+        // 축하 폭죽 승리 사운드
+        function playVictorySound() {
+            initAudio();
+            if (!audioCtx) return;
+
+            const now = audioCtx.currentTime;
+            [261.63, 329.63, 392.00, 523.25, 659.25, 783.99].forEach((freq, i) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, now + i * 0.08);
+
+                gain.gain.setValueAtTime(0.25, now + i * 0.08);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.3);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now + i * 0.08);
+                osc.stop(now + i * 0.08 + 0.35);
+            });
+        }
+
+        function showScreen(screenId) {
+            ['screen-main', 'screen-explain', 'screen-select', 'screen-game', 'screen-result'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+
+            document.getElementById('modal-fall').classList.add('hidden');
+            document.getElementById('modal-victory').classList.add('hidden');
+
+            document.getElementById(screenId).classList.remove('hidden');
+
+            if (screenId === 'screen-game') {
+                init2DGame();
+            }
+        }
+
+        function goHome() {
+            isGameOver = false;
+            fireworks = [];
+            document.getElementById('modal-fall').classList.add('hidden');
+            document.getElementById('modal-victory').classList.add('hidden');
+            showScreen('screen-main');
+        }
+
+        function startGame(subject) {
+            currentSubject = subject;
+            floorSteps = 0;
+            solvedQuizTotal = 0;
+            gateQuizCount = 0;
+            isGateActive = false;
+            isGameOver = false;
+            isEndlessMode = false;
+
+            const badge = document.getElementById('game-cat-badge');
+            if(subject === 'history') badge.innerText = "역사";
+            if(subject === 'english') badge.innerText = "영어";
+            if(subject === 'ai') badge.innerText = "AI";
+
+            document.getElementById('platform-step-count').innerText = floorSteps;
+            document.getElementById('quiz-solved-count').innerText = solvedQuizTotal;
+
+            document.getElementById('quiz-post-overlay').classList.add('hidden');
+
+            showScreen('screen-game');
+        }
+
+        function continueEndlessMode() {
+            isEndlessMode = true;
+            isGateActive = false;
+            document.getElementById('screen-result').classList.add('hidden');
+            document.getElementById('screen-game').classList.remove('hidden');
+            document.getElementById('quiz-post-overlay').classList.add('hidden');
+            isGameOver = false;
+            lastTime = performance.now();
+            requestAnimationFrame(gameLoop2D);
+        }
+
+        function restartGame() {
+            document.getElementById('modal-fall').classList.add('hidden');
+            isGameOver = false;
+
+            const targetPlatform = platforms2D.find(p => p.id === floorSteps) || platforms2D[0];
+
+            player.x = targetPlatform.x + targetPlatform.w / 2 - player.w / 2;
+            player.y = targetPlatform.y - player.h - 2;
+            player.vy = 0;
+            player.onGround = true;
+
+            lastTime = performance.now();
+            requestAnimationFrame(gameLoop2D);
+        }
+
+        // 2D 점프맵 엔진 Variables
+        let canvas, ctx;
+        let player = { x: 0, y: 0, w: 26, h: 32, vy: 0, onGround: true, legAngle: 0 };
+        let platforms2D = [];
+        let particles = [];
+        let fireworks = [];
+        let keyState = {};
+        let cameraY = 0;
+        let lastTime = 0;
+        let victoryTriggered = false;
+
+        function init2DGame() {
+            canvas = document.getElementById('gameCanvas');
+            if (!canvas) return;
+
+            ctx = canvas.getContext('2d');
+
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+
+            victoryTriggered = false;
+            isGameOver = false;
+            particles = [];
+            fireworks = [];
+
+            generate2DPlatforms();
+
+            // Player Initial Spawn (0번 발판 위)
+            const baseP = platforms2D[0];
+            player.x = baseP.x + baseP.w / 2 - player.w / 2;
+            player.y = baseP.y - player.h - 2;
+            player.vy = 0;
+            player.onGround = true;
+
+            cameraY = player.y - canvas.height * 0.65;
+
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keyup', handleKeyUp);
+            window.addEventListener('keydown', handleKeyDown);
+            window.addEventListener('keyup', handleKeyUp);
+
+            lastTime = performance.now();
+            requestAnimationFrame(gameLoop2D);
+        }
+
+        function generate2DPlatforms() {
+            platforms2D = [];
+            // 순서: 왁뿌 -> 슬랑이 -> 키캡 순순 반복
+            const types = ['wakp', 'slang', 'keycap'];
+
+            const pWidth = 100;
+            const pHeight = 24;
+            const startX = canvas.width / 2 - pWidth / 2;
+            const startY = canvas.height - 120;
+
+            // 0번 시작 발판
+            platforms2D.push({
+                id: 0,
+                x: startX,
+                y: startY,
+                w: pWidth,
+                h: pHeight,
+                type: 'wakp',
+                stepped: false
+            });
+
+            // 1~100번 수직 발판 생성 (앞으로 직진 계단형)
+            for (let i = 1; i <= 120; i++) {
+                const type = types[(i - 1) % 3];
+                // 좌우 약간의 오프셋 (완전 직진 동선 내 범위)
+                const offsetX = (Math.sin(i * 1.3) * (canvas.width * 0.22));
+                const platformObj = {
+                    id: i,
+                    x: Math.max(20, Math.min(canvas.width - pWidth - 20, canvas.width / 2 - pWidth / 2 + offsetX)),
+                    y: startY - i * 85,
+                    w: pWidth,
+                    h: pHeight,
+                    type: type,
+                    stepped: false
+                };
+                platforms2D.push(platformObj);
+            }
+        }
+
+        function handleKeyDown(e) {
+            keyState[e.code] = true;
+            if (['Space', 'PageUp', 'Home', 'End', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'ArrowDown'].includes(e.code)) {
+                e.preventDefault();
+            }
+        }
+
+        function handleKeyUp(e) {
+            keyState[e.code] = false;
+        }
+
+        function gameLoop2D(timestamp) {
+            const dt = Math.min((timestamp - lastTime) / 1000, 0.035); // Frame-rate speed lock
+            lastTime = timestamp;
+
+            if (!isGameOver) {
+                update2D(dt);
+                render2D();
+                requestAnimationFrame(gameLoop2D);
+            }
+        }
+
+        function update2D(dt) {
+            if (isGameOver || isGateActive) return;
+
+            const speed = 210 * dt;
+            let isMovingHorizontal = false;
+
+            // 좌우 이동 (Home / ← / End / →)
+            if (keyState['Home'] || keyState['ArrowLeft']) {
+                player.x -= speed;
+                isMovingHorizontal = true;
+            }
+            if (keyState['End'] || keyState['ArrowRight']) {
+                player.x += speed;
+                isMovingHorizontal = true;
+            }
+
+            // 앞으로 직진 (PgUp / ↑ / ↓)
+            if (keyState['PageUp'] || keyState['ArrowUp']) {
+                player.y -= speed * 0.6; // 약간 상승 직진 보조
+                isMovingHorizontal = true;
+            }
+            if (keyState['ArrowDown']) {
+                player.y += speed * 0.6;
+                isMovingHorizontal = true;
+            }
+
+            if (isMovingHorizontal) {
+                player.legAngle += 12 * dt;
+            } else {
+                player.legAngle = 0;
+            }
+
+            // 점프 (Space)
+            if (keyState['Space'] && player.onGround) {
+                player.vy = -560; // 점프 속도
+                player.onGround = false;
+            }
+
+            // 중력 적용
+            const gravity = 1250;
+            player.vy += gravity * dt;
+            player.y += player.vy * dt;
+
+            // 정밀 2D 발판 충돌 판정 (발판 상단 면만 오직 착지 가능하도록 정밀 픽셀 히트박스 적용)
+            player.onGround = false;
+
+            for (let p of platforms2D) {
+                // 발판 상단 꼭짓점 히트박스 영역
+                const footY = player.y + player.h;
+                const prevFootY = footY - player.vy * dt;
+
+                if (player.x + player.w * 0.75 >= p.x && player.x + player.w * 0.25 <= p.x + p.w) {
+                    // 낙하 중일 때만 발판 상단 윗면에 착지
+                    if (player.vy >= 0 && prevFootY <= p.y + 6 && footY >= p.y - 2) {
+                        player.y = p.y - player.h;
+                        player.vy = 0;
+                        player.onGround = true;
+
+                        // 최초 단 1회 착지시에만 소리 재생 및 스텝 카운트
+                        if (!p.stepped) {
+                            p.stepped = true;
+                            playStepSound(p.type);
+                            createParticles(player.x + player.w / 2, player.y + player.h, p.type);
+                        } else if (p.id !== floorSteps) {
+                            playStepSound(p.type);
+                        }
+
+                        if (p.id > floorSteps) {
+                            floorSteps = p.id;
+                            document.getElementById('platform-step-count').innerText = floorSteps;
+
+                            // 100번째 정상 도달 시 폭죽 연출 및 승리 모달
+                            if (floorSteps >= 100 && !victoryTriggered) {
+                                victoryTriggered = true;
+                                trigger100Victory();
+                            }
+
+                            // 5의 배수 발판 도착 시 퀴즈 관문 오픈
+                            if (!isEndlessMode && floorSteps > 0 && floorSteps % 5 === 0 && solvedQuizTotal < 15 && floorSteps < 100) {
+                                triggerQuizGate();
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+
+            // 카메라 Y 부드러운 수직 추적
+            const targetCamY = player.y - canvas.height * 0.6;
+            cameraY += (targetCamY - cameraY) * 0.1;
+
+            // 바닥 추락 판정
+            if (player.y > cameraY + canvas.height + 80) {
+                isGameOver = true;
+                document.getElementById('modal-fall').classList.remove('hidden');
+            }
+
+            // 파티클 및 폭죽 업데이트
+            for (let i = particles.length - 1; i >= 0; i--) {
+                let pt = particles[i];
+                pt.x += pt.vx;
+                pt.y += pt.vy;
+                pt.life -= dt * 2.5;
+                if (pt.life <= 0) particles.splice(i, 1);
+            }
+
+            for (let i = fireworks.length - 1; i >= 0; i--) {
+                let fw = fireworks[i];
+                fw.x += fw.vx;
+                fw.y += fw.vy;
+                fw.vy += 40 * dt; // gravity
+                fw.life -= dt * 0.8;
+                if (fw.life <= 0) fireworks.splice(i, 1);
+            }
+        }
+
+        function createParticles(x, y, type) {
+            const colors = type === 'wakp' ? ['#FFD1DC', '#FF8EA5', '#A5D8FF'] :
+                          (type === 'slang' ? ['#FFF099', '#FFE066', '#F59E0B'] : ['#FFB7B2', '#B5EAD7', '#C7CEEA']);
+            for (let i = 0; i < 8; i++) {
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: (Math.random() - 0.5) * 120,
+                    vy: (Math.random() - 0.5) * 80 - 40,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    life: 1.0
+                });
+            }
+        }
+
+        function launchFirework() {
+            const colors = ['#FF4081', '#FFEB3B', '#00E676', '#00E5FF', '#D500F9', '#FF9100'];
+            const fx = Math.random() * canvas.width;
+            const fy = cameraY + Math.random() * (canvas.height * 0.5);
+
+            for (let i = 0; i < 35; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 100 + Math.random() * 220;
+                fireworks.push({
+                    x: fx,
+                    y: fy,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    life: 1.0
+                });
+            }
+        }
+
+        function trigger100Victory() {
+            playVictorySound();
+            for (let i = 0; i < 5; i++) {
+                setTimeout(launchFirework, i * 250);
+            }
+            setTimeout(() => {
+                document.getElementById('modal-victory').classList.remove('hidden');
+            }, 1200);
+        }
+
+        function render2D() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 파스텔 그라데이션 배경
+            let bgGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            bgGrad.addColorStop(0, '#FFE6EB');
+            bgGrad.addColorStop(0.5, '#FFD1DC');
+            bgGrad.addColorStop(1, '#FFC2D1');
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.save();
+            ctx.translate(0, -cameraY);
+
+            // 2D 발판 그리기
+            platforms2D.forEach(p => {
+                if (p.y + p.h < cameraY - 100 || p.y > cameraY + canvas.height + 100) return;
+
+                // 발판 그림자
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+                ctx.beginPath();
+                ctx.roundRect(p.x + 3, p.y + p.h - 2, p.w, 8, 4);
+                ctx.fill();
+
+                if (p.type === 'wakp') { // 1. 왁뿌 발판 (마블 스퀴시 젤리)
+                    let grad = ctx.createLinearGradient(p.x, p.y, p.x + p.w, p.y + p.h);
+                    grad.addColorStop(0, '#FFD1DC');
+                    grad.addColorStop(0.5, '#A5D8FF');
+                    grad.addColorStop(1, '#FF8EA5');
+
+                    ctx.fillStyle = grad;
+                    ctx.beginPath();
+                    ctx.roundRect(p.x, p.y, p.w, p.h, 12);
+                    ctx.fill();
+                    ctx.strokeStyle = '#FFFFFF';
+                    ctx.lineWidth = 2.5;
+                    ctx.stroke();
+
+                    // 상단 젤리 볼 3개 오프셋
+                    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+                    ctx.beginPath();
+                    ctx.arc(p.x + p.w * 0.25, p.y + 6, 4, 0, Math.PI * 2);
+                    ctx.arc(p.x + p.w * 0.5, p.y + 6, 4, 0, Math.PI * 2);
+                    ctx.arc(p.x + p.w * 0.75, p.y + 6, 4, 0, Math.PI * 2);
+                    ctx.fill();
+
+                } else if (p.type === 'slang') { // 2. 슬랑이 발판 (파스텔 버터 스틱)
+                    ctx.fillStyle = '#FFF099';
+                    ctx.beginPath();
+                    ctx.roundRect(p.x, p.y, p.w, p.h, 8);
+                    ctx.fill();
+                    ctx.strokeStyle = '#FFE066';
+                    ctx.lineWidth = 2.5;
+                    ctx.stroke();
+
+                    ctx.fillStyle = '#1D4ED8';
+                    ctx.font = 'bold 11px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText('4oz BUTTER', p.x + p.w / 2, p.y + p.h / 2 + 1);
+
+                } else { // 3. 키캡 발판 (3x3 미니 키보드 플레이트)
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.beginPath();
+                    ctx.roundRect(p.x, p.y, p.w, p.h, 6);
+                    ctx.fill();
+                    ctx.strokeStyle = '#FFB7B2';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+
+                    const keyColors = ['#FFB7B2', '#FFDAC1', '#E2F0CB', '#B5EAD7', '#C7CEEA', '#F3C4FB'];
+                    const kw = (p.w - 12) / 4;
+                    const kh = p.h - 8;
+                    for (let c = 0; c < 4; c++) {
+                        ctx.fillStyle = keyColors[c % keyColors.length];
+                        ctx.beginPath();
+                        ctx.roundRect(p.x + 3 + c * (kw + 2), p.y + 4, kw, kh, 3);
+                        ctx.fill();
+                    }
+                }
+            });
+
+            // 플레이어 그리기
+            let px = player.x;
+            let py = player.y;
+
+            // 플레이어 그림자
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+            ctx.beginPath();
+            ctx.ellipse(px + player.w / 2, py + player.h + 2, player.w * 0.45, 4, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 캐릭터 몸통
+            ctx.fillStyle = '#FF6B8B';
+            ctx.beginPath();
+            ctx.roundRect(px, py, player.w, player.h - 6, 12);
+            ctx.fill();
+            ctx.strokeStyle = '#FFFFFF';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // 캐릭터 눈
+            ctx.fillStyle = '#222222';
+            ctx.beginPath();
+            ctx.arc(px + 8, py + 10, 2.2, 0, Math.PI * 2);
+            ctx.arc(px + player.w - 8, py + 10, 2.2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 볼터치
+            ctx.fillStyle = '#FF8EA5';
+            ctx.beginPath();
+            ctx.arc(px + 5, py + 15, 3, 0, Math.PI * 2);
+            ctx.arc(px + player.w - 5, py + 15, 3, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 다리
+            ctx.strokeStyle = '#FF6B8B';
+            ctx.lineWidth = 3.5;
+            ctx.lineCap = 'round';
+            let legOff = Math.sin(player.legAngle) * 5;
+            ctx.beginPath();
+            ctx.moveTo(px + 8, py + player.h - 6);
+            ctx.lineTo(px + 8, py + player.h + legOff);
+            ctx.moveTo(px + player.w - 8, py + player.h - 6);
+            ctx.lineTo(px + player.w - 8, py + player.h - legOff);
+            ctx.stroke();
+
+            // 파티클
+            particles.forEach(pt => {
+                ctx.fillStyle = pt.color;
+                ctx.globalAlpha = Math.max(0, pt.life);
+                ctx.beginPath();
+                ctx.arc(pt.x, pt.y, 3.5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1.0;
+            });
+
+            // 폭죽
+            fireworks.forEach(fw => {
+                ctx.fillStyle = fw.color;
+                ctx.globalAlpha = Math.max(0, fw.life);
+                ctx.beginPath();
+                ctx.arc(fw.x, fw.y, 4, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1.0;
+            });
+
+            ctx.restore();
+        }
+
+        function triggerQuizGate() {
+            isGateActive = true;
+            gateQuizCount = 0;
+            isOptionLocked = false;
+            document.getElementById('quiz-post-overlay').classList.remove('hidden');
+
+            loadCurrentQuiz();
+        }
+
+        function loadCurrentQuiz() {
+            const list = quizDB[currentSubject];
+            if (solvedQuizTotal >= list.length) {
+                document.getElementById('result-cat-text').innerText =
+                    currentSubject === 'history' ? '역사' : (currentSubject === 'english' ? '영어' : 'AI');
+                document.getElementById('quiz-post-overlay').classList.add('hidden');
+                showScreen('screen-result');
+                return;
+            }
+
+            const qData = list[solvedQuizTotal];
+
+            document.getElementById('quiz-gate-progress').innerText = gateQuizCount + 1;
+            document.getElementById('quiz-total-index').innerText = solvedQuizTotal + 1;
+            document.getElementById('quiz-question').innerText = qData.q;
+
+            const optContainer = document.getElementById('quiz-options');
+            optContainer.innerHTML = '';
+
+            const feedback = document.getElementById('quiz-feedback');
+            feedback.classList.add('hidden');
+            isOptionLocked = false;
+
+            if (qData.type === 'subjective') {
+                const inputWrap = document.createElement('div');
+                inputWrap.className = "flex flex-col gap-2.5 my-2";
+                
+                const textInput = document.createElement('input');
+                textInput.type = "text";
+                textInput.id = "quiz-input-answer";
+                textInput.placeholder = "정답을 직접 입력하세요...";
+                textInput.className = "w-full p-3 rounded-xl border-2 border-pinkMain1 text-sm font-bold text-gray-800 focus:outline-none focus:border-pinkMain2 shadow-inner";
+                
+                textInput.onkeydown = (e) => {
+                    e.stopPropagation();
+                    if (e.key === 'Enter' && !isOptionLocked) {
+                        checkSubjectiveAnswer(textInput.value, qData.answer);
+                    }
+                };
+
+                const submitBtn = document.createElement('button');
+                submitBtn.className = "w-full py-3 bg-gradient-to-r from-pinkMain1 to-pinkMain2 text-white font-black text-sm rounded-xl shadow-md hover:scale-105 transition transform active:scale-95";
+                submitBtn.innerText = "정답 제출하기";
+                submitBtn.onclick = () => {
+                    if (!isOptionLocked) checkSubjectiveAnswer(textInput.value, qData.answer);
+                };
+
+                inputWrap.appendChild(textInput);
+                inputWrap.appendChild(submitBtn);
+                optContainer.appendChild(inputWrap);
+
+                setTimeout(() => textInput.focus(), 100);
+            } else {
+                qData.options.forEach((optText, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = "quiz-opt-btn w-full text-left py-2.5 px-3 rounded-xl border border-pinkMain1 bg-white hover:bg-pinkLight1 text-xs font-bold text-gray-800 transition flex items-center gap-2";
+                    btn.innerHTML = `<span class="w-5 h-5 rounded-full bg-pinkLight1 text-pinkDark flex items-center justify-center text-[10px] font-extrabold flex-shrink-0">${idx+1}</span> <span>${optText}</span>`;
+                    btn.onclick = () => {
+                        if (!isOptionLocked) checkQuizAnswer(idx, qData.answer, btn);
+                    };
+                    optContainer.appendChild(btn);
+                });
+            }
+        }
+
+        function checkSubjectiveAnswer(userVal, correctVal) {
+            if (isOptionLocked) return;
+            isOptionLocked = true;
+
+            const feedback = document.getElementById('quiz-feedback');
+            feedback.classList.remove('hidden');
+
+            const cleanUser = (userVal || "").replace(/\s+/g, '').toLowerCase();
+            
+            let isCorrect = false;
+            if (Array.isArray(correctVal)) {
+                isCorrect = correctVal.some(ans => {
+                    const cleanAns = ans.replace(/\s+/g, '').toLowerCase();
+                    return cleanUser.length > 0 && cleanUser === cleanAns;
+                });
+            } else {
+                const cleanCorrect = (correctVal || "").replace(/\s+/g, '').toLowerCase();
+                isCorrect = cleanUser.length > 0 && cleanUser === cleanCorrect;
+            }
+
+            if (isCorrect) {
+                feedback.className = "p-2 rounded-xl text-center text-xs font-extrabold bg-green-100 text-green-700 border border-green-300";
+                feedback.innerText = "🎉 정답입니다!";
+
+                setTimeout(() => {
+                    solvedQuizTotal++;
+                    gateQuizCount++;
+                    document.getElementById('quiz-solved-count').innerText = solvedQuizTotal;
+
+                    if (solvedQuizTotal >= 15) {
+                        document.getElementById('result-cat-text').innerText =
+                            currentSubject === 'history' ? '역사' : (currentSubject === 'english' ? '영어' : 'AI');
+                        document.getElementById('quiz-post-overlay').classList.add('hidden');
+                        showScreen('screen-result');
+                    } else if (gateQuizCount >= 3) {
+                        isGateActive = false;
+                        document.getElementById('quiz-post-overlay').classList.add('hidden');
+                    } else {
+                        loadCurrentQuiz();
+                    }
+                }, 900);
+            } else {
+                feedback.className = "p-2 rounded-xl text-center text-xs font-extrabold bg-red-100 text-red-700 border border-red-300";
+                feedback.innerText = "❌ 틀렸습니다! 정답을 다시 입력해보세요.";
+                // 틀린 경우 다시 풀 수 있도록 락 해제
+                setTimeout(() => { isOptionLocked = false; }, 400);
+            }
+        }
+
+        function checkQuizAnswer(selected, correct, btnEl) {
+            if (isOptionLocked) return; // 더블클릭 및 연타 방지
+            isOptionLocked = true;
+
+            const feedback = document.getElementById('quiz-feedback');
+            feedback.classList.remove('hidden');
+
+            if (selected === correct) {
+                if(btnEl) btnEl.classList.add('bg-green-100', 'border-green-400');
+                feedback.className = "p-2 rounded-xl text-center text-xs font-extrabold bg-green-100 text-green-700 border border-green-300";
+                feedback.innerText = "🎉 정답입니다!";
+
+                setTimeout(() => {
+                    solvedQuizTotal++;
+                    gateQuizCount++;
+                    document.getElementById('quiz-solved-count').innerText = solvedQuizTotal;
+
+                    if (solvedQuizTotal >= 15) {
+                        document.getElementById('result-cat-text').innerText =
+                            currentSubject === 'history' ? '역사' : (currentSubject === 'english' ? '영어' : 'AI');
+                        document.getElementById('quiz-post-overlay').classList.add('hidden');
+                        showScreen('screen-result');
+                    } else if (gateQuizCount >= 3) {
+                        isGateActive = false;
+                        document.getElementById('quiz-post-overlay').classList.add('hidden');
+                    } else {
+                        loadCurrentQuiz();
+                    }
+                }, 900);
+            } else {
+                if(btnEl) btnEl.classList.add('bg-red-100', 'border-red-400');
+                feedback.className = "p-2 rounded-xl text-center text-xs font-extrabold bg-red-100 text-red-700 border border-red-300";
+                feedback.innerText = "❌ 틀렸습니다! 다시 생각해보세요.";
+                // 틀렸을 때만 다른 선택지를 다중 선택 가능하도록 락 해제
+                setTimeout(() => { isOptionLocked = false; }, 500);
+            }
+        }
+    </script>
+
