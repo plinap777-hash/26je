@@ -1,9 +1,13 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>전의초등학교 영재학급 사사프로젝트 한눈에 보기</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  /* 밝은 화면 기본 값 */
   --bg: #fdf6f8;
   --card: #ffffff;
   --fg: #3a2a31;
@@ -15,119 +19,43 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #241c20;
-    --card: #2f2428;
-    --fg: #f6e9ee;
-    --muted: #b59aa6;
-    --accent: #f08aa0;
-    --accent-soft: #3d2a31;
-    --line: #4a3840;
-    color-scheme: dark;
+    --bg: #241c20; --card: #2f2428; --fg: #f6e9ee; --muted: #b59aa6;
+    --accent: #f08aa0; --accent-soft: #3d2a31; --line: #4a3840; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #241c20;
-  --card: #2f2428;
-  --fg: #f6e9ee;
-  --muted: #b59aa6;
-  --accent: #f08aa0;
-  --accent-soft: #3d2a31;
-  --line: #4a3840;
-  color-scheme: dark;
+  --bg: #241c20; --card: #2f2428; --fg: #f6e9ee; --muted: #b59aa6;
+  --accent: #f08aa0; --accent-soft: #3d2a31; --line: #4a3840; color-scheme: dark;
 }
-
 body {
   margin: 0;
   background: var(--bg);
   color: var(--fg);
   font-family: "Noto Sans KR", system-ui, sans-serif;
-  padding-block: 40px;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding: 40px max(16px, env(safe-area-inset-left, 0px)) 40px max(16px, env(safe-area-inset-right, 0px));
   line-height: 1.6;
 }
-
 .wrap { max-width: 880px; margin: 0 auto; }
-
 header { margin-bottom: 32px; }
-.eyebrow {
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-  margin: 0 0 8px;
-}
-h1 {
-  font-size: clamp(22px, 5vw, 32px);
-  font-weight: 900;
-  line-height: 1.3;
-  margin: 0 0 12px;
-  text-wrap: balance;
-}
+.eyebrow { font-size: 13px; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 8px; }
+h1 { font-size: clamp(22px, 5vw, 32px); font-weight: 900; line-height: 1.3; margin: 0 0 12px; text-wrap: balance; }
 .lead { margin: 0; color: var(--muted); font-size: 15px; }
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-}
-
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
 .card {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-width: 0;
-  padding: 22px;
-  border-radius: 16px;
-  background: var(--card);
-  border: 1px solid var(--line);
-  color: var(--fg);
-  text-decoration: none;
-  transition: transform 0.15s ease, border-color 0.15s ease;
+  display: flex; flex-direction: column; gap: 10px; min-width: 0; padding: 22px;
+  border-radius: 16px; background: var(--card); border: 1px solid var(--line);
+  color: var(--fg); text-decoration: none; transition: transform 0.15s ease, border-color 0.15s ease;
 }
-a.card:hover, a.card:focus-visible {
-  transform: translateY(-2px);
-  border-color: var(--accent);
-  outline: none;
-}
-.stage {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--accent);
-}
-.title {
-  font-size: 19px;
-  font-weight: 700;
-  margin: 0;
-}
-.desc {
-  font-size: 14px;
-  color: var(--muted);
-  margin: 0;
-}
-.open {
-  margin-top: auto;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--accent);
-}
-.card.pending {
-  opacity: 0.6;
-  border-style: dashed;
-  cursor: default;
-}
-.card.pending .open { color: var(--muted); }
-
-footer {
-  margin-top: 32px;
-  font-size: 13px;
-  color: var(--muted);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  a.card { transition: none; }
-}
+a.card:hover, a.card:focus-visible { transform: translateY(-2px); border-color: var(--accent); outline: none; }
+.stage { font-size: 13px; font-weight: 700; color: var(--accent); }
+.title { font-size: 19px; font-weight: 700; margin: 0; }
+.desc { font-size: 14px; color: var(--muted); margin: 0; }
+.open { margin-top: auto; font-size: 14px; font-weight: 700; color: var(--accent); }
+footer { margin-top: 32px; font-size: 13px; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { a.card { transition: none; } }
 </style>
-
+</head>
+<body>
 <div class="wrap">
   <header>
     <p class="eyebrow">전의초등학교 영재학급</p>
@@ -144,26 +72,28 @@ footer {
     </a>
 
     <a class="card" href="stage2.html" target="_blank" rel="noopener">
-      <span class="stage">2차 개발 완성</span>
+      <span class="stage">2차 개발 완성 (하드모드)</span>
       <p class="title">2차 자료</p>
-      <p class="desc">과목별 퀴즈와 점프맵 게임</p>
-      <span class="open">열기 →</span>
-    </a>
-
-    <a class="card" href="stage3.html" target="_blank" rel="noopener">
-      <span class="stage">3차 개발 완성 (하드모드)</span>
-      <p class="title">3차 자료</p>
       <p class="desc">3D 발판, 사라지는 발판, 15초 제한 퀴즈가 있는 타워 게임</p>
       <span class="open">열기 →</span>
     </a>
 
+    <a class="card" href="stage3.html" target="_blank" rel="noopener">
+      <span class="stage">3차 수정 (하드모드)</span>
+      <p class="title">3차 자료</p>
+      <p class="desc">2차 검토 내용을 반영한 수정본: 사람 캐릭터, 무한의 계단식 점프, 다시 시작 수정, 키캡 발판, 퀴즈 정답 검수</p>
+      <span class="open">열기 →</span>
+    </a>
+
     <a class="card" href="stage4.html" target="_blank" rel="noopener">
-      <span class="stage">4차 수정 (하드모드)</span>
+      <span class="stage">4차 개발 (하드모드)</span>
       <p class="title">4차 자료</p>
-      <p class="desc">3차 검토 내용을 반영한 수정본: 사람 캐릭터, 무한의 계단식 점프, 다시 시작 수정, 키캡 발판, 퀴즈 정답 검수</p>
+      <p class="desc">보기 순서 섞기, 시간 초과 시 재시작, 퀴즈 중 정지, 왁뿌 파괴 효과 등 게임 오류 수정본</p>
       <span class="open">열기 →</span>
     </a>
   </main>
 
   <footer>전의초등학교 영재학급 사사프로젝트</footer>
 </div>
+</body>
+</html>
