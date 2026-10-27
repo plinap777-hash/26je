@@ -1,424 +1,370 @@
 
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
+
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>스트레스 타파 4차 하드모드</title>
-    <!-- Tailwind CSS CDN -->
+    <title>스트레스 타파 4차</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;600;800;900&display=swap" rel="stylesheet">
-    <!-- Three.js CDN -->
+    <!-- Three.js (3D Graphics) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        pinkLight1: '#FFE6EB',
-                        pinkLight2: '#FFD1DC',
-                        pinkMain1: '#FF8EA5',
-                        pinkMain2: '#FF6B8B',
-                        pinkDark: '#D84B68',
-                    },
-                    fontFamily: {
-                        sans: ['"Gowun Dodum"', '"Noto Sans KR"', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'pink-soft': '0 10px 25px -5px rgba(255, 107, 139, 0.3), 0 8px 10px -6px rgba(255, 142, 165, 0.2)',
-                        'pink-glow': '0 0 20px rgba(255, 107, 139, 0.6)',
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Canvas Confetti for Victory Fireworks -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
-        body {
-            background: linear-gradient(135deg, #FFE6EB 0%, #FFD1DC 50%, #FFC2D1 100%);
-            height: 100vh;
-            max-height: 100vh;
-            overflow: hidden;
+        @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap');
+        
+        * {
+            font-family: 'Jua', 'Gowun Dodum', sans-serif;
             user-select: none;
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(12px);
-            border: 2px solid rgba(255, 142, 165, 0.4);
+            -webkit-user-select: none;
         }
 
-        @keyframes subtleFloat {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-6px); }
-        }
-        .animate-float {
-            animation: subtleFloat 3.5s ease-in-out infinite;
-        }
-
-        .hero-title-container {
-            min-height: 32vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        body {
+            background: linear-gradient(135deg, #fbcfe8 0%, #f472b6 50%, #fce7f3 100%);
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
         }
 
-        .hero-title-line {
-            font-size: clamp(2.2rem, 5.8vw, 4.2rem);
-            line-height: 1.25;
-            letter-spacing: -0.02em;
-            white-space: nowrap;
-            word-break: keep-all;
-            text-shadow: 0 8px 20px rgba(255, 107, 139, 0.3);
-        }
-
-        #game3dContainer {
+        #canvas-container {
             width: 100%;
             height: 100%;
             position: absolute;
-            inset: 0;
+            top: 0;
+            left: 0;
+            z-index: 1;
         }
 
-        /* 퀴즈 타이머 프로그레스바 */
-        #quiz-timer-bar {
-            transition: width 0.1s linear;
+        .ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .interactive {
+            pointer-events: auto;
+        }
+
+        /* Glassmorphism UI Style */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 30px rgba(244, 114, 182, 0.25);
+        }
+
+        .btn-bounce {
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .btn-bounce:hover {
+            transform: scale(1.06);
+        }
+        .btn-bounce:active {
+            transform: scale(0.94);
+        }
+
+        /* Quiz Choice Animation */
+        .option-btn {
+            transition: all 0.15s ease-out;
+        }
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+        }
+
+        /* Custom Keyframes */
+        @keyframes pulse-subtle {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        .animate-pulse-subtle {
+            animation: pulse-subtle 2s infinite ease-in-out;
         }
     </style>
-<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:"Gowun Dodum", "Noto Sans KR", sans-serif;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.pointer-events-none{pointer-events:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0px}.left-4{left:1rem}.right-4{right:1rem}.top-4{top:1rem}.z-10{z-index:10}.z-20{z-index:20}.z-30{z-index:30}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.my-2{margin-top:0.5rem;margin-bottom:0.5rem}.mb-1{margin-bottom:0.25rem}.mb-2{margin-bottom:0.5rem}.mb-3{margin-bottom:0.75rem}.mb-5{margin-bottom:1.25rem}.mb-6{margin-bottom:1.5rem}.mt-0\.5{margin-top:0.125rem}.mt-2{margin-top:0.5rem}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-10{height:2.5rem}.h-full{height:100%}.h-screen{height:100vh}.h-14{height:3.5rem}.h-16{height:4rem}.h-2\.5{height:0.625rem}.h-20{height:5rem}.max-h-\[85vh\]{max-height:85vh}.max-h-screen{max-height:100vh}.min-h-\[48px\]{min-height:48px}.w-10{width:2.5rem}.w-full{width:100%}.w-14{width:3.5rem}.w-16{width:4rem}.w-20{width:5rem}.max-w-2xl{max-width:42rem}.max-w-4xl{max-width:56rem}.max-w-6xl{max-width:72rem}.max-w-md{max-width:28rem}.max-w-xs{max-width:20rem}.max-w-sm{max-width:24rem}.max-w-xl{max-width:36rem}.flex-1{flex:1 1 0%}.flex-shrink-0{flex-shrink:0}.transform{transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-pointer{cursor:pointer}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-2{gap:0.5rem}.gap-4{gap:1rem}.gap-1{gap:0.25rem}.gap-2\.5{gap:0.625rem}.gap-3{gap:0.75rem}.space-x-2 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.5rem * var(--tw-space-x-reverse));margin-left:calc(0.5rem * calc(1 - var(--tw-space-x-reverse)))}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-8 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(2rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(2rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.overflow-hidden{overflow:hidden}.overflow-y-auto{overflow-y:auto}.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-full{border-radius:9999px}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-2{border-width:2px}.border-4{border-width:4px}.border-b{border-bottom-width:1px}.border-pinkMain1{--tw-border-opacity:1;border-color:rgb(255 142 165 / var(--tw-border-opacity, 1))}.border-pinkMain1\/50{border-color:rgb(255 142 165 / 0.5)}.border-gray-100{--tw-border-opacity:1;border-color:rgb(243 244 246 / var(--tw-border-opacity, 1))}.border-gray-300{--tw-border-opacity:1;border-color:rgb(209 213 219 / var(--tw-border-opacity, 1))}.border-pinkMain1\/30{border-color:rgb(255 142 165 / 0.3)}.border-pinkMain1\/60{border-color:rgb(255 142 165 / 0.6)}.border-pinkMain2{--tw-border-opacity:1;border-color:rgb(255 107 139 / var(--tw-border-opacity, 1))}.border-green-300{--tw-border-opacity:1;border-color:rgb(134 239 172 / var(--tw-border-opacity, 1))}.border-red-300{--tw-border-opacity:1;border-color:rgb(252 165 165 / var(--tw-border-opacity, 1))}.bg-pinkLight1{--tw-bg-opacity:1;background-color:rgb(255 230 235 / var(--tw-bg-opacity, 1))}.bg-pinkLight1\/80{background-color:rgb(255 230 235 / 0.8)}.bg-pinkMain2{--tw-bg-opacity:1;background-color:rgb(255 107 139 / var(--tw-bg-opacity, 1))}.bg-red-500{--tw-bg-opacity:1;background-color:rgb(239 68 68 / var(--tw-bg-opacity, 1))}.bg-white\/90{background-color:rgb(255 255 255 / 0.9)}.bg-amber-100{--tw-bg-opacity:1;background-color:rgb(254 243 199 / var(--tw-bg-opacity, 1))}.bg-black\/40{background-color:rgb(0 0 0 / 0.4)}.bg-black\/50{background-color:rgb(0 0 0 / 0.5)}.bg-black\/60{background-color:rgb(0 0 0 / 0.6)}.bg-blue-100{--tw-bg-opacity:1;background-color:rgb(219 234 254 / var(--tw-bg-opacity, 1))}.bg-gray-200{--tw-bg-opacity:1;background-color:rgb(229 231 235 / var(--tw-bg-opacity, 1))}.bg-purple-100{--tw-bg-opacity:1;background-color:rgb(243 232 255 / var(--tw-bg-opacity, 1))}.bg-red-100{--tw-bg-opacity:1;background-color:rgb(254 226 226 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-white\/80{background-color:rgb(255 255 255 / 0.8)}.bg-white\/95{background-color:rgb(255 255 255 / 0.95)}.bg-green-100{--tw-bg-opacity:1;background-color:rgb(220 252 231 / var(--tw-bg-opacity, 1))}.bg-gradient-to-r{background-image:linear-gradient(to right, var(--tw-gradient-stops))}.bg-gradient-to-tr{background-image:linear-gradient(to top right, var(--tw-gradient-stops))}.from-pinkMain1{--tw-gradient-from:#FF8EA5 var(--tw-gradient-from-position);--tw-gradient-to:rgb(255 142 165 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.from-yellow-400{--tw-gradient-from:#facc15 var(--tw-gradient-from-position);--tw-gradient-to:rgb(250 204 21 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.to-pinkMain2{--tw-gradient-to:#FF6B8B var(--tw-gradient-to-position)}.to-pinkMain1{--tw-gradient-to:#FF8EA5 var(--tw-gradient-to-position)}.to-red-500{--tw-gradient-to:#ef4444 var(--tw-gradient-to-position)}.p-3{padding:0.75rem}.p-3\.5{padding:0.875rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-2\.5{padding:0.625rem}.p-6{padding:1.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-8{padding-top:2rem;padding-bottom:2rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-3\.5{padding-top:0.875rem;padding-bottom:0.875rem}.pb-1\.5{padding-bottom:0.375rem}.text-left{text-align:left}.text-center{text-align:center}.font-sans{font-family:"Gowun Dodum", "Noto Sans KR", sans-serif}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-\[11px\]{font-size:11px}.text-base{font-size:1rem;line-height:1.5rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.font-black{font-weight:900}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-semibold{font-weight:600}.font-medium{font-weight:500}.uppercase{text-transform:uppercase}.leading-relaxed{line-height:1.625}.leading-snug{line-height:1.375}.tracking-tight{letter-spacing:-0.025em}.tracking-wider{letter-spacing:0.05em}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55 / var(--tw-text-opacity, 1))}.text-pinkDark{--tw-text-opacity:1;color:rgb(216 75 104 / var(--tw-text-opacity, 1))}.text-pinkMain2{--tw-text-opacity:1;color:rgb(255 107 139 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-amber-600{--tw-text-opacity:1;color:rgb(217 119 6 / var(--tw-text-opacity, 1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.text-pinkDark\/70{color:rgb(216 75 104 / 0.7)}.text-purple-600{--tw-text-opacity:1;color:rgb(147 51 234 / var(--tw-text-opacity, 1))}.text-red-500{--tw-text-opacity:1;color:rgb(239 68 68 / var(--tw-text-opacity, 1))}.text-pinkMain1{--tw-text-opacity:1;color:rgb(255 142 165 / var(--tw-text-opacity, 1))}.text-green-700{--tw-text-opacity:1;color:rgb(21 128 61 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.shadow-inner{--tw-shadow:inset 0 2px 4px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:inset 0 2px 4px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-pink-soft{--tw-shadow:0 10px 25px -5px rgba(255, 107, 139, 0.3), 0 8px 10px -6px rgba(255, 142, 165, 0.2);--tw-shadow-colored:0 10px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-pink-glow{--tw-shadow:0 0 20px rgba(255, 107, 139, 0.6);--tw-shadow-colored:0 0 20px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:-translate-y-1:hover{--tw-translate-y:-0.25rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:scale-105:hover{--tw-scale-x:1.05;--tw-scale-y:1.05;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:border-pinkMain2:hover{--tw-border-opacity:1;border-color:rgb(255 107 139 / var(--tw-border-opacity, 1))}.hover\:bg-pinkLight1:hover{--tw-bg-opacity:1;background-color:rgb(255 230 235 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-100:hover{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.hover\:text-pinkDark:hover{--tw-text-opacity:1;color:rgb(216 75 104 / var(--tw-text-opacity, 1))}.active\:scale-95:active{--tw-scale-x:.95;--tw-scale-y:.95;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@media (min-width: 640px){.sm\:inline{display:inline}.sm\:max-w-md{max-width:28rem}.sm\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.sm\:flex-row{flex-direction:row}.sm\:p-6{padding:1.5rem}.sm\:p-8{padding:2rem}.sm\:px-10{padding-left:2.5rem;padding-right:2.5rem}.sm\:text-2xl{font-size:1.5rem;line-height:2rem}.sm\:text-sm{font-size:0.875rem;line-height:1.25rem}.sm\:text-3xl{font-size:1.875rem;line-height:2.25rem}.sm\:text-base{font-size:1rem;line-height:1.5rem}}</style>
 
-    <!-- Header -->
-    <header class="w-full max-w-6xl mx-auto p-4 flex justify-between items-center z-20 flex-shrink-0">
-        <div class="flex items-center space-x-2 cursor-pointer" onclick="goHome()">
-            <div class="w-10 h-10 rounded-full bg-pinkMain2 text-white flex items-center justify-center shadow-md">
-                <i class="fa-solid fa-chess-rook text-xl"></i>
-            </div>
-            <span class="font-bold text-lg text-pinkDark tracking-tight hidden sm:inline">스트레스 타파! (하드)</span>
-        </div>
-    </header>
 
-    <!-- Main View Area -->
-    <main class="w-full h-full mx-auto relative z-10 flex-1 overflow-hidden">
 
-        <!-- 메인 화면 -->
-        <section id="screen-main" class="w-full max-w-4xl mx-auto h-full flex flex-col items-center justify-center text-center space-y-8 py-2">
-            <div class="w-full max-w-2xl hero-title-container animate-float">
-                <div class="glass-card w-full py-8 px-6 sm:px-10 rounded-3xl shadow-pink-soft border-4 border-pinkMain1 flex flex-col items-center justify-center space-y-2">
-                    <span class="px-3 py-1 bg-red-500 text-white font-extrabold text-xs rounded-full uppercase tracking-wider mb-1 shadow-sm">🔥 Hard Challenge Mode</span>
-                    <h1 class="hero-title-line font-black text-pinkDark">
-                        스트레스 타파
-                    </h1>
-                    <h2 class="hero-title-line font-black text-pinkMain2">
-                        학습 타워!
-                    </h2>
-                </div>
-            </div>
+    <!-- 3D WebGL Canvas Container -->
+    <div id="canvas-container"></div>
 
-            <div class="flex flex-col sm:flex-row gap-4 w-full max-w-xs sm:max-w-md">
-                <button onclick="showScreen('screen-select')" class="w-full py-4 px-6 bg-gradient-to-r from-pinkMain1 to-pinkMain2 text-white font-extrabold text-xl rounded-2xl shadow-pink-soft hover:scale-105 transition transform active:scale-95 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-fire"></i> 도전 시작하기
-                </button>
-                <button onclick="showScreen('screen-explain')" class="w-full py-4 px-6 bg-white/90 text-pinkDark font-extrabold text-xl border-2 border-pinkMain1 rounded-2xl shadow-sm hover:bg-pinkLight1 hover:scale-105 transition transform active:scale-95 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-circle-question"></i> 난이도 설명
-                </button>
-            </div>
-        </section>
+    <!-- UI Overlay Layer -->
+    <div class="ui-layer flex flex-col justify-between p-4 md:p-6">
 
-        <!-- 설명 페이지 -->
-        <section id="screen-explain" class="w-full max-w-md mx-auto h-full flex flex-col items-center justify-center text-center py-2 hidden">
-            <div class="glass-card w-full p-5 sm:p-6 rounded-3xl shadow-pink-soft border-2 border-pinkMain1 flex flex-col justify-between max-h-[85vh] overflow-y-auto">
+        <!-- Top HUD Bar -->
+        <div id="hud" class="flex justify-between items-center w-full max-w-4xl mx-auto hidden interactive">
+            <div class="glass-panel px-5 py-2.5 rounded-full flex items-center space-x-3">
+                <span class="text-2xl">🏆</span>
                 <div>
-                    <div class="w-10 h-10 bg-pinkLight1 rounded-full mx-auto flex items-center justify-center text-pinkMain2 text-xl mb-2 border border-pinkMain1">
-                        <i class="fa-solid fa-book-open"></i>
-                    </div>
-                    <h2 class="text-xl sm:text-2xl font-extrabold text-pinkDark mb-3">🔥 하드모드 특징</h2>
-                    
-                    <div class="bg-white/90 p-3.5 rounded-2xl border border-pinkMain1/50 text-gray-800 text-xs sm:text-sm leading-relaxed mb-3 font-semibold shadow-inner text-left space-y-2">
-                        <p>⚠️ <strong>좌우로 움직이는 발판!</strong> 높은 구역일수록 발판이 좌우로 이동하여 정교한 점프 타이밍이 필요합니다.</p>
-                        <p>⚠️ <strong>사라지는 1회용 발판!</strong> 깜빡이는 발판은 밟은 뒤 1.5초 만에 사라집니다!</p>
-                        <p>⚠️ <strong>퀴즈 제한시간 15초!</strong> 퀴즈 출제 시 제한시간 안에 정답을 맞춰야 승리합니다.</p>
-                        <p>💡 5발판마다 관문 퀴즈가 등장하며 100층 정상 도달 시 정복 완료!</p>
-                    </div>
-
-                    <div class="bg-pinkLight1/80 p-3 rounded-2xl border border-pinkMain1 text-pinkDark text-xs leading-relaxed mb-3 font-bold shadow-inner text-left">
-                        🎮 <strong>조작 방법:</strong><br>
-                        • <strong>Space / ↑ / W / PgUp</strong>: 앞으로 점프 (다음 발판에 착지)<br>• <strong>← / A + 점프</strong>: 왼쪽 대각선 점프<br>• <strong>→ / D + 점프</strong>: 오른쪽 대각선 점프<br>• <strong>← / →</strong>: 발판 위에서 좌우 이동
-                    </div>
+                    <div class="text-xs text-pink-500 font-bold">현재 도달 발판</div>
+                    <div class="text-xl font-extrabold text-pink-700"><span id="platform-step-count">0</span> / 100 칸</div>
                 </div>
+            </div>
 
-                <button onclick="goHome()" class="w-full py-3 px-6 bg-gradient-to-r from-pinkMain1 to-pinkMain2 text-white font-extrabold text-base rounded-2xl shadow-md hover:scale-105 transition transform active:scale-95 flex items-center justify-center gap-2 mt-2">
-                    <i class="fa-solid fa-house"></i> 홈으로
+            <button onclick="goHome()" class="glass-panel px-5 py-2.5 rounded-full flex items-center space-x-2 text-pink-700 font-bold btn-bounce shadow-md">
+                <span>🏠</span>
+                <span>홈으로</span>
+            </button>
+        </div>
+
+        <!-- Touch / On-Screen Controls for Mobile Playability -->
+        <div id="touch-controls" class="hidden interactive flex justify-between items-end w-full max-w-lg mx-auto mb-2 px-4">
+            <div class="grid grid-cols-3 gap-2 w-36 h-36">
+                <div></div>
+                <button id="btn-up" class="glass-panel rounded-2xl flex items-center justify-center text-2xl text-pink-600 active:bg-pink-200">▲</button>
+                <div></div>
+                <button id="btn-left" class="glass-panel rounded-2xl flex items-center justify-center text-2xl text-pink-600 active:bg-pink-200">◀</button>
+                <button id="btn-down" class="glass-panel rounded-2xl flex items-center justify-center text-2xl text-pink-600 active:bg-pink-200">▼</button>
+                <button id="btn-right" class="glass-panel rounded-2xl flex items-center justify-center text-2xl text-pink-600 active:bg-pink-200">▶</button>
+            </div>
+            <button id="btn-jump" class="glass-panel w-24 h-24 rounded-full flex items-center justify-center text-2xl font-bold text-pink-600 active:bg-pink-300 shadow-lg border-4 border-pink-200">
+                점프! 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- Screen 1: Home / Main Menu Screen -->
+    <div id="screen-home" class="ui-layer flex items-center justify-center p-4 interactive">
+        <div class="glass-panel p-8 md:p-12 rounded-3xl max-w-lg w-full text-center shadow-2xl border-4 border-white">
+            <div class="text-6xl mb-4 animate-pulse-subtle">🍬✨</div>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-pink-600 mb-3 tracking-wide">
+                스트레스 타파!<br><span class="text-purple-600">학습 타워 100</span>
+            </h1>
+            <p class="text-gray-600 mb-8 text-sm md:text-base leading-relaxed">
+                ASMR 발판을 밟고 신나게 점프해보세요!<br>
+                5칸마다 펼쳐지는 학습 퀴즈를 맞히고 100층 정상을 향해 도전해봐요! 🎯
+            </p>
+
+            <div class="space-y-4">
+                <button onclick="showScreen('screen-select-subject')" class="w-full py-4 bg-gradient-to-r from-pink-400 to-purple-500 hover:from-pink-500 hover:to-purple-600 text-white font-extrabold text-xl rounded-2xl shadow-lg btn-bounce">
+                    🎮 게임 시작하기
+                </button>
+                <button onclick="showScreen('screen-howto')" class="w-full py-3 bg-white text-pink-600 font-bold text-lg rounded-2xl shadow border-2 border-pink-200 btn-bounce">
+                    📖 게임 방법 설명
                 </button>
             </div>
-        </section>
+        </div>
+    </div>
 
-        <!-- 과목 선택 화면 -->
-        <section id="screen-select" class="w-full max-w-xl mx-auto h-full flex flex-col items-center justify-center text-center space-y-4 py-4 hidden">
-            <div class="glass-card w-full p-6 rounded-3xl shadow-pink-soft border-2 border-pinkMain1">
-                <h2 class="text-2xl sm:text-3xl font-black text-pinkDark mb-2">하드 퀴즈 도전</h2>
-                <p class="text-xs sm:text-sm text-gray-600 mb-6 font-medium">원하는 과목을 선택하여 스트레스 타파 타워에 도전하세요!</p>
-
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-                    <div onclick="startGame('history')" class="group cursor-pointer bg-white/90 p-5 rounded-2xl border-2 border-pinkMain1 hover:border-pinkMain2 hover:bg-pinkLight1 transition transform hover:-translate-y-1 flex flex-col items-center">
-                        <div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-2xl mb-2 shadow-sm">
-                            <i class="fa-solid fa-landmark"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-gray-800">역사 (심화)</h3>
-                        <p class="text-[11px] text-gray-500 mt-0.5">역사 난관 15문제</p>
-                    </div>
-
-                    <div onclick="startGame('english')" class="group cursor-pointer bg-white/90 p-5 rounded-2xl border-2 border-pinkMain1 hover:border-pinkMain2 hover:bg-pinkLight1 transition transform hover:-translate-y-1 flex flex-col items-center">
-                        <div class="w-14 h-14 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-2xl mb-2 shadow-sm">
-                            <i class="fa-solid fa-language"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-gray-800">영어 (응용)</h3>
-                        <p class="text-[11px] text-gray-500 mt-0.5">영어 실전 15문제</p>
-                    </div>
-
-                    <div onclick="startGame('ai')" class="group cursor-pointer bg-white/90 p-5 rounded-2xl border-2 border-pinkMain1 hover:border-pinkMain2 hover:bg-pinkLight1 transition transform hover:-translate-y-1 flex flex-col items-center">
-                        <div class="w-14 h-14 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center text-2xl mb-2 shadow-sm">
-                            <i class="fa-solid fa-robot"></i>
-                        </div>
-                        <h3 class="text-lg font-bold text-gray-800">AI (고급)</h3>
-                        <p class="text-[11px] text-gray-500 mt-0.5">인공지능 개념 15문제</p>
-                    </div>
-                </div>
-
-                <button onclick="goHome()" class="py-2.5 px-6 bg-white border border-pinkMain1 text-pinkDark font-bold text-xs rounded-xl hover:bg-pinkLight1 transition">
-                    <i class="fa-solid fa-arrow-left"></i> 홈으로 돌아가기
-                </button>
-            </div>
-        </section>
-
-        <!-- 게임 진행 화면 -->
-        <section id="screen-game" class="absolute inset-0 w-full h-full z-10 overflow-hidden hidden">
+    <!-- Screen 2: Subject Selection Screen -->
+    <div id="screen-select-subject" class="ui-layer flex items-center justify-center p-4 hidden interactive">
+        <div class="glass-panel p-8 md:p-10 rounded-3xl max-w-md w-full text-center shadow-2xl border-4 border-white">
+            <h2 class="text-2xl font-extrabold text-pink-600 mb-6">📚 도전할 과목을 선택하세요!</h2>
             
-            <!-- 상단 HUD -->
-            <div class="absolute top-4 left-4 right-4 z-20 max-w-4xl mx-auto glass-card px-5 py-3 rounded-full shadow-md flex justify-between items-center border border-pinkMain1/60">
-                <div class="flex items-center gap-3">
-                    <span id="game-cat-badge" class="px-3 py-1 bg-pinkMain2 text-white text-xs font-black rounded-full shadow-sm">역사</span>
-                    <span class="text-xs sm:text-sm font-extrabold text-pinkDark flex items-center gap-1">
-                        🚩 발판: <span id="platform-step-count" class="text-pinkMain2 font-black text-base">0</span> / 100
-                    </span>
+            <div class="space-y-3.5 mb-6">
+                <button onclick="startGame('history')" class="w-full py-4 bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold text-lg rounded-2xl border-2 border-amber-300 btn-bounce flex items-center justify-between px-6">
+                    <span>📜 한국사 / 역사</span>
+                    <span>➡️</span>
+                </button>
+                <button onclick="startGame('english')" class="w-full py-4 bg-blue-100 hover:bg-blue-200 text-blue-800 font-bold text-lg rounded-2xl border-2 border-blue-300 btn-bounce flex items-center justify-between px-6">
+                    <span>🔤 초중등 영어</span>
+                    <span>➡️</span>
+                </button>
+                <button onclick="startGame('ai')" class="w-full py-4 bg-purple-100 hover:bg-purple-200 text-purple-800 font-bold text-lg rounded-2xl border-2 border-purple-300 btn-bounce flex items-center justify-between px-6">
+                    <span>🤖 AI / 인공지능 기초</span>
+                    <span>➡️</span>
+                </button>
+            </div>
+
+            <button onclick="showScreen('screen-home')" class="text-gray-500 hover:text-pink-600 font-bold text-sm">
+                ⬅️ 메인 화면으로 돌아가기
+            </button>
+        </div>
+    </div>
+
+    <!-- Screen 3: How To Play Screen -->
+    <div id="screen-howto" class="ui-layer flex items-center justify-center p-4 hidden interactive">
+        <div class="glass-panel p-8 rounded-3xl max-w-md w-full text-left shadow-2xl border-4 border-white space-y-4">
+            <h2 class="text-2xl font-extrabold text-pink-600 text-center mb-4">📖 게임 방법 안내</h2>
+            
+            <div class="space-y-3 text-sm text-gray-700 leading-relaxed">
+                <div class="p-3 bg-pink-50 rounded-xl border border-pink-200">
+                    <strong class="text-pink-600">🕹️ 조작법:</strong> 키보드 방향키(W,A,S,D)로 이동, <span class="bg-white px-2 py-0.5 rounded font-bold border">스페이스바</span>로 점프합니다. (모바일 터치 패드 지원)
                 </div>
-                <div class="flex items-center gap-3">
-                    <span class="text-xs sm:text-sm font-bold text-gray-700">⭐ 정답: <span id="quiz-solved-count" class="text-pinkMain2 font-extrabold">0</span> / 15</span>
-                    <button onclick="goHome()" class="px-3 py-1 bg-white hover:bg-pinkLight1 border border-pinkMain1 text-pinkDark text-xs font-bold rounded-full transition shadow-sm flex items-center gap-1">
-                        <i class="fa-solid fa-house"></i> 메인
-                    </button>
+                <div class="p-3 bg-purple-50 rounded-xl border border-purple-200">
+                    <strong class="text-purple-600">🔊 3가지 ASMR 발판:</strong>
+                    <ul class="list-disc list-inside mt-1 space-y-1 text-xs text-gray-600">
+                        <li><strong>왁뿌:</strong> 파스텔 젤리 구체 - 밟으면 구체에 금이 가며 묵직한 물컹음!</li>
+                        <li><strong>슬랑이:</strong> 긴 버터 블록 - 밟으면 푹 꺼졌다 복원되는 쫀득한 슬라임음!</li>
+                        <li><strong>키캡:</strong> 3x3 큐브 키캡 - 밟으면 부서지는 입자와 함께 자각 타건음!</li>
+                    </ul>
+                </div>
+                <div class="p-3 bg-yellow-50 rounded-xl border border-yellow-200">
+                    <strong class="text-yellow-700">🎯 관문 퀴즈:</strong> 5칸을 오를 때마다 학습 관문 퀴즈가 출제됩니다! 100층 정상까지 신나게 완주해보세요!
                 </div>
             </div>
 
-            <!-- 3D Three.js 화면 캔버스 -->
-            <div id="game3dContainer"></div>
+            <button onclick="showScreen('screen-home')" class="w-full py-3 bg-pink-500 hover:bg-pink-600 text-white font-bold text-base rounded-2xl shadow btn-bounce mt-4">
+                확인했습니다! 👍
+            </button>
+        </div>
+    </div>
 
-            <!-- 퀴즈 팝업 포스트잇 카드 -->
-            <div id="quiz-post-overlay" class="absolute z-30 inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 hidden">
-                <div class="glass-card w-full max-w-md p-6 rounded-3xl shadow-pink-glow border-4 border-pinkMain1 bg-white/95 flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-xs font-extrabold text-pinkMain2 bg-pinkLight1 px-3 py-1 rounded-full border border-pinkMain1">
-                                🔒 관문 퀴즈 (제한시간 15초)
-                            </span>
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs font-bold text-gray-500">
-                                    진행 문제: <span id="quiz-total-index">1</span>/15
-                                </span>
-                                <button onclick="goHome()" class="px-2.5 py-1 bg-white hover:bg-pinkLight1 border border-pinkMain1 text-pinkDark text-xs font-bold rounded-full transition shadow-sm flex items-center gap-1">
-                                    <i class="fa-solid fa-house"></i> 홈
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- 타임 게이지 바 -->
-                        <div class="w-full bg-gray-200 h-2.5 rounded-full overflow-hidden mb-3 border border-pinkMain1/30">
-                            <div id="quiz-timer-bar" class="bg-gradient-to-r from-pinkMain1 to-red-500 h-full w-full" style="width: 100%;"></div>
-                        </div>
-
-                        <h3 id="quiz-question" class="text-sm sm:text-base font-bold text-gray-800 leading-snug my-2 min-h-[48px]">퀴즈 문제 불러오는 중...</h3>
-                    </div>
-
-                    <div id="quiz-options" class="space-y-2 my-2"></div>
-                    <div id="quiz-feedback" class="hidden p-2.5 rounded-2xl text-center text-xs font-extrabold mt-2"></div>
+    <!-- Screen 4: Gate Quiz Modal Overlay -->
+    <div id="modal-quiz" class="ui-layer flex items-center justify-center p-4 hidden interactive bg-black/40 backdrop-blur-sm">
+        <div class="glass-panel p-6 md:p-8 rounded-3xl max-w-lg w-full text-left shadow-2xl border-4 border-pink-300 relative">
+            
+            <!-- Quiz Header Bar -->
+            <div class="flex justify-between items-center mb-4 border-b border-pink-200 pb-3">
+                <div class="flex items-center space-x-2">
+                    <span class="text-2xl">🧠</span>
+                    <span class="text-lg font-bold text-pink-700">학습 관문 퀴즈</span>
                 </div>
+                <button onclick="goHome()" class="px-3 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 text-xs font-bold rounded-lg btn-bounce">
+                    🏠 홈으로
+                </button>
             </div>
 
-        </section>
+            <!-- Quiz Timer & Status -->
+            <div class="flex justify-between items-center mb-3">
+                <span id="quiz-question-num" class="text-xs bg-pink-100 text-pink-700 font-bold px-2.5 py-1 rounded-full">관문 문제</span>
+                <span id="quiz-timer" class="text-xs font-bold text-red-500 bg-red-50 px-2 py-0.5 rounded-full border border-red-200">남은 시간: 15초</span>
+            </div>
 
-        <!-- 추락 모달 Popup -->
-        <div id="modal-fall" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 hidden">
-            <div class="glass-card w-full max-w-sm p-6 rounded-3xl shadow-pink-glow border-4 border-pinkMain2 text-center">
-                <div class="w-16 h-16 bg-red-100 text-red-500 rounded-full mx-auto flex items-center justify-center text-3xl mb-3 shadow-md">
-                    <i class="fa-solid fa-person-falling"></i>
-                </div>
-                <h2 class="text-2xl font-black text-pinkDark mb-1">바닥으로 추락했습니다!</h2>
-                <p class="text-xs text-gray-600 mb-5 font-semibold">움직이거나 사라지는 발판을 조심하세요.</p>
+            <!-- Quiz Question Text -->
+            <div id="quiz-question" class="text-lg font-bold text-gray-800 mb-5 leading-snug">
+                질문 내용이 여기에 들어갑니다.
+            </div>
 
-                <div class="flex flex-col gap-2.5">
-                    <button onclick="restartGame()" class="w-full py-3 px-4 bg-gradient-to-r from-pinkMain1 to-pinkMain2 text-white font-extrabold text-sm rounded-xl shadow-md hover:scale-105 transition transform active:scale-95 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-arrow-up"></i> 마지막 발판부터 다시 도전
-                    </button>
-                    <button onclick="goHome()" class="w-full py-2.5 px-4 bg-white text-pinkDark font-bold text-xs border border-pinkMain1 rounded-xl hover:bg-pinkLight1 transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-house"></i> 홈으로
-                    </button>
-                </div>
+            <!-- Quiz Choice Buttons / Subjective Input Container -->
+            <div id="quiz-options-container" class="space-y-2.5 mb-4">
+                <!-- Dynamically generated choice buttons -->
+            </div>
+
+            <!-- Feedback Message Area -->
+            <div id="quiz-feedback" class="text-center font-bold text-sm min-h-[1.5rem]"></div>
+        </div>
+    </div>
+
+    <!-- Screen 5: Game Over / Fall Modal -->
+    <div id="modal-fall" class="ui-layer flex items-center justify-center p-4 hidden interactive bg-black/50 backdrop-blur-sm">
+        <div class="glass-panel p-8 rounded-3xl max-w-md w-full text-center shadow-2xl border-4 border-red-300">
+            <div class="text-6xl mb-3">💦</div>
+            <h2 class="text-2xl font-extrabold text-red-600 mb-2">아쉬워요! 타워에서 떨어졌어요!</h2>
+            <p class="text-gray-600 text-sm mb-6">다시 마음을 가다듬고 1층부터 다시 올라가 볼까요?</p>
+
+            <div class="space-y-3">
+                <button onclick="restartGame()" class="w-full py-3.5 bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-bold text-lg rounded-2xl shadow btn-bounce">
+                    🔄 처음부터 다시 도전하기
+                </button>
+                <button onclick="goHome()" class="w-full py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-base rounded-2xl btn-bounce">
+                    🏠 메인 화면으로
+                </button>
             </div>
         </div>
+    </div>
 
-        <!-- 100칸 도달 승리 모달 -->
-        <div id="modal-victory" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
-            <div class="glass-card w-full max-w-md p-6 sm:p-8 rounded-3xl shadow-pink-glow border-4 border-pinkMain2 text-center animate-float relative overflow-hidden">
-                <div class="w-20 h-20 bg-gradient-to-tr from-yellow-400 to-pinkMain1 rounded-full mx-auto flex items-center justify-center text-white text-4xl mb-3 shadow-lg">
-                    <i class="fa-solid fa-crown"></i>
-                </div>
-                <h2 class="text-2xl sm:text-3xl font-black text-pinkDark mb-1">100층 하드 타워 정복!</h2>
-                <p class="text-xs sm:text-sm text-gray-600 mb-6 font-bold">🎉 정교한 점프와 지식으로 하드모드를 클리어하셨습니다! 🎉</p>
+    <!-- Screen 6: Victory Modal -->
+    <div id="modal-victory" class="ui-layer flex items-center justify-center p-4 hidden interactive bg-black/40 backdrop-blur-sm">
+        <div class="glass-panel p-8 rounded-3xl max-w-md w-full text-center shadow-2xl border-4 border-yellow-300 relative overflow-hidden">
+            <div class="text-6xl mb-3 animate-bounce">🎉🏆✨</div>
+            <h2 class="text-3xl font-extrabold text-pink-600 mb-2">축하합니다! 100층 등반 성공!</h2>
+            <p class="text-gray-600 text-sm mb-6">완벽한 실력과 집중력으로 모든 퀴즈와 발판을 정복하셨습니다!</p>
 
-                <div class="flex flex-col gap-3">
-                    <button onclick="showScreen('screen-select')" class="w-full py-3.5 px-4 bg-gradient-to-r from-pinkMain1 to-pinkMain2 text-white font-black text-sm sm:text-base rounded-2xl shadow-md hover:scale-105 transition transform active:scale-95 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-list-check"></i> 다른 과목 도전하기
-                    </button>
-                    <button onclick="goHome()" class="w-full py-3 px-4 bg-white text-pinkDark font-extrabold text-sm rounded-2xl border-2 border-pinkMain1 hover:bg-pinkLight1 transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-house"></i> 홈으로 (메인 화면)
-                    </button>
-                </div>
+            <div class="space-y-3">
+                <button onclick="showScreen('screen-select-subject')" class="w-full py-3.5 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold text-lg rounded-2xl shadow btn-bounce">
+                    📚 다른 과목 풀기
+                </button>
+                <button onclick="goHome()" class="w-full py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-base rounded-2xl btn-bounce">
+                    🏠 메인 화면으로
+                </button>
             </div>
         </div>
+    </div>
 
-        <!-- 정복 완료 화면 -->
-        <section id="screen-result" class="hidden w-full max-w-md mx-auto h-full flex flex-col items-center justify-center text-center py-4">
-            <div class="glass-card w-full p-6 sm:p-8 rounded-3xl shadow-pink-glow border-2 border-pinkMain2 relative overflow-hidden animate-float">
-                <div class="w-16 h-16 bg-gradient-to-tr from-pinkMain1 to-pinkMain2 rounded-full mx-auto flex items-center justify-center text-white text-3xl mb-3 shadow-lg">
-                    <i class="fa-solid fa-trophy"></i>
-                </div>
-                <h2 class="text-2xl font-black text-pinkDark mb-1">15문제 완파 성공!</h2>
-                <p class="text-xs text-gray-600 mb-5 font-semibold">모든 관문 퀴즈를 해결했습니다!</p>
-
-                <div class="bg-white/90 p-4 rounded-2xl border border-pinkMain1 mb-5 space-y-2 shadow-inner">
-                    <div class="flex justify-between items-center text-xs font-semibold border-b pb-1.5 border-gray-100">
-                        <span class="text-gray-500">도전 과목</span>
-                        <span id="result-cat-text" class="font-extrabold text-pinkDark">역사</span>
-                    </div>
-                    <div class="flex justify-between items-center text-xs font-semibold">
-                        <span class="text-gray-500">풀어낸 문제 수</span>
-                        <span class="text-lg font-black text-pinkMain2">15 / 15 문제</span>
-                    </div>
-                </div>
-
-                <div class="flex flex-col gap-2.5">
-                    <button onclick="continueEndlessMode()" class="w-full py-3 px-4 bg-gradient-to-r from-pinkMain1 to-pinkMain2 text-white font-extrabold text-sm rounded-xl shadow-md hover:scale-105 transition transform active:scale-95 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-forward"></i> 무한 타워 계속 등반하기
-                    </button>
-                    <button onclick="showScreen('screen-select')" class="w-full py-3 px-4 bg-white text-pinkDark font-extrabold text-sm border-2 border-pinkMain1 rounded-xl hover:bg-pinkLight1 transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-list-check"></i> 다른 과목 도전하기
-                    </button>
-                    <button onclick="goHome()" class="w-full py-2.5 px-4 bg-white/80 text-gray-700 font-bold text-xs border border-gray-300 rounded-xl hover:bg-gray-100 transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-house"></i> 홈으로 (메인 화면)
-                    </button>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <footer class="w-full py-2 text-center text-[11px] text-pinkDark/70 font-bold z-20 pointer-events-none">
-        스트레스 타파 학습 타워! (Hard Mode) © 2026. All rights reserved.
-    </footer>
-
+    <!-- Game Logic Script -->
     <script>
+        // ==========================================
+        // 1. 학습 퀴즈 데이터베이스 (Quiz DB)
+        // ==========================================
         const quizDB = {
             history: [
-                { q: "1. [역사] 훈민정음을 창제한 조선의 제4대 국왕은?", options: ["태종", "세종대왕", "성종", "정조"], answer: 1 },
-                { q: "2. [역사] 임진왜란 당시 한산도 대첩을 승리로 이끈 장군은?", options: ["강감찬", "이순신", "김유신", "을지문덕"], answer: 1 },
-                { q: "3. [역사] 졸본에 고구려를 건국한 인물은 누구일까요?", options: ["주몽", "온조", "혁거세", "단군왕검"], answer: 0 },
-                { q: "4. [역사] 삼국 통일의 대업을 완성한 신라의 왕은?", options: ["태종 무열왕", "문무왕", "진흥왕", "법흥왕"], answer: 1 },
-                { q: "5. [역사] 후삼국을 통일하고 고려를 건국한 왕은?", options: ["이성계", "왕건", "견훤", "궁예"], answer: 1 },
-                { q: "6. [역사] 조선 시대를 개창한 태조의 성명은 무엇일까요?", type: "subjective", answer: "이성계" },
-                { q: "7. [역사] 일제강점기 3·1 만세 운동이 일어난 해는?", options: ["1910년", "1919년", "1945년", "1950년"], answer: 1 },
-                { q: "8. [역사] 훈민정음의 제자 원리와 창제 목적을 밝힌 해설서는?", options: ["훈민정음 해례본", "경국대전", "동의보감", "삼국유사"], answer: 0 },
-                { q: "9. [역사] 고구려 유민을 이끌고 발해를 건국한 인물은?", options: ["대조영", "양만춘", "연개소문", "광개토대왕"], answer: 0 },
-                { q: "10. [역사] 조선시대 허준이 지은 대표 의학서의 이름은?", type: "subjective", answer: "동의보감" },
-                { q: "11. [역사] 살수대첩에서 수나라 30만 대군을 대파한 장수는?", options: ["을지문덕", "강감찬", "연개소문", "김유신"], answer: 0 },
-                { q: "12. [역사] 귀주대첩에서 거란군을 물리친 고려의 명장은?", options: ["서희", "강감찬", "윤관", "최영"], answer: 1 },
-                { q: "13. [역사] 조선의 으뜸이 되는 제1의 법궁은?", options: ["창덕궁", "경복궁", "창경궁", "덕수궁"], answer: 1 },
-                { q: "14. [역사] 조선시대 왕들의 국정 기록을 담은 세계기록유산은?", options: ["조선왕조실록", "삼국사기", "고려사", "동국통감"], answer: 0 },
-                { q: "15. [역사] 우리 역사상 최초의 고대 국가 이름은?", type: "subjective", answer: "고조선" }
+                { q: "조선을 건국한 태조의 이름은 무엇일까요?", options: ["이성계", "왕건", "이방원", "김유신"], answer: 0 },
+                { q: "훈민정음을 창제하신 조선의 대왕은?", options: ["세종대왕", "영조", "정조", "태종"], answer: 0 },
+                { q: "임진왜란 때 한산도 대첩을 이끈 장군은?", options: ["이순신", "강감찬", "김유신", "을지문덕"], answer: 0 },
+                { q: "고구려의 영토를 넓게 확장한 유명한 왕은?", options: ["광개토대왕", "근초고왕", "진흥왕", "의자왕"], answer: 0 },
+                { q: "삼국시대 세 나라는 고구려, 백제, 그리고 어느 나라일까요?", options: ["신라", "발해", "가야", "조선"], answer: 0 },
+                { q: "3·1 운동 때 만세운동을 이끌고 서대문형무소에서 순국한 독립운동가는?", options: ["유관순", "김구", "안중근", "윤봉길"], answer: 0 },
+                { q: "고려를 건국한 왕은 누구일까요?", options: ["왕건", "이성계", "대조영", "온조"], answer: 0 },
+                { q: "이토 히로부미를 하얼빈역에서 단죄한 독립운동가는?", options: ["안중근", "윤봉길", "유관순", "김좌진"], answer: 0 },
+                { q: "조선시대 백성들의 억울함을 알리기 위해 친 북의 이름은?", options: ["신문고", "자격루", "혼천의", "측우기"], answer: 0 },
+                { q: "신라의 수도 경주에 있는 국보 첨성대는 무엇을 하던 곳일까요?", options: ["별 관측", "음식 저장", "무기 보관", "왕의 침실"], answer: 0 },
+                { q: "조선시대 측우기를 만든 대표적인 과학자는?", options: ["장영실", "정약용", "허준", "김정호"], answer: 0 },
+                { q: "동의보감을 집필한 조선시대 유명한 의학자는?", options: ["허준", "장영실", "이황", "이이"], answer: 0 },
+                { q: "대동여지도를 제작한 조선의 지리학자는?", options: ["김정호", "정약용", "장영실", "안용복"], answer: 0 },
+                { q: "삼국통일 전쟁에서 활약한 신라의 명장은?", options: ["김유신", "계백", "을지문덕", "양만춘"], answer: 0 },
+                { q: "살수대첩에서 수나라 군대를 물리친 고구려 장군은?", options: ["을지문덕", "강감찬", "김유신", "이순신"], answer: 0 },
+                { q: "귀주대첩에서 거란군을 물리친 고려의 장군은?", options: ["강감찬", "최영", "이성계", "김윤후"], answer: 0 },
+                { q: "조선 22대 왕으로 규장각을 설치하고 학문을 진흥한 왕은?", options: ["정조", "영조", "숙종", "중종"], answer: 0 },
+                { q: "일제강점기 3·1 운동이 일어난 해는 몇 년도일까요?", options: ["1919년", "1945년", "1910년", "1950년"], answer: 0 },
+                { q: "우리나라 광복이 이루어진 해는 몇 년도일까요?", options: ["1945년", "1919년", "1950년", "1988년"], answer: 0 },
+                { q: "조선 세종 때 만든 물시계의 이름은 무엇일까요?", options: ["자격루", "앙부일구", "혼천의", "측우기"], answer: 0 }
             ],
             english: [
-                { q: "1. [영어] '지식을 전달하다 / 주다'에 해당하는 영어 단어는?", options: ["buy", "receive", "give"], answer: 2 },
-                { q: "2. [영어] 'happy'의 올바른 형용사적 의미는?", options: ["행복하다", "행복한", "행복했다"], answer: 1 },
-                { q: "3. [영어] 계절 중 '봄'을 뜻하는 올바른 철자는?", options: ["string", "sprin", "spring"], answer: 2 },
-                { q: "4. [영어] 숫자 3을 나타내는 영어 단어는?", options: ["three", "sree", "tree"], answer: 0 },
-                { q: "5. [영어] 알파벳 소문자/대문자는 총 몇 개로 구성되어 있나요?", options: ["24개", "26개", "20개"], answer: 1 },
-                { q: "6. [영어] 9월을 뜻하는 영어 단어는?", options: ["september", "September", "Saptamber"], answer: 1 },
-                { q: "7. [영어] '부모님'을 의미하는 영어 단어는?", options: ["grandparents", "child", "parents"], answer: 2 },
-                { q: "8. [영어] 'safe'의 올바른 한국어 발음 표기는?", options: ["세이프", "세페", "세프"], answer: 0 },
-                { q: "9. [영어] 문장의 첫 시작 알파벳은 대문자로 써야 한다.", options: ["O", "X"], answer: 0 },
-                { q: "10. [영어] 'Play'에는 악기를 연주하다라는 뜻도 포함된다.", options: ["O", "X"], answer: 0 },
-                { q: "11. [영어] 'Fish'는 복수형일 때 반드시 -s를 붙여야 한다.", options: ["O", "X"], answer: 1 },
-                { q: "12. [영어] 'Beautiful'의 반대말에 가까운 단어는?", options: ["Ugly", "Pretty", "Nice"], answer: 0 },
-                { q: "13. [영어] 'Library'의 한국어 뜻은?", options: ["도서관", "박물관", "미술관"], answer: 0 },
-                { q: "14. [영어] '어제'를 뜻하는 영어 단어는?", options: ["Tomorrow", "Today", "Yesterday"], answer: 2 },
-                { q: "15. [영어] 'Apple' 단어 앞에는 'a' 대신 'an'을 붙인다.", options: ["O", "X"], answer: 0 }
+                { q: "'사과'를 뜻하는 영단어는 무엇일까요?", options: ["Apple", "Banana", "Orange", "Grape"], answer: 0 },
+                { q: "'학교'를 뜻하는 영단어는 무엇일까요?", options: ["School", "Hospital", "Library", "Park"], answer: 0 },
+                { q: "'책'을 뜻하는 영단어는 무엇일까요?", options: ["Book", "Desk", "Pencil", "Eraser"], answer: 0 },
+                { q: "'행복한'이라는 뜻의 영단어는 무엇일까요?", options: ["Happy", "Sad", "Angry", "Tired"], answer: 0 },
+                { q: "'태양/해'를 뜻하는 영단어는 무엇일까요?", options: ["Sun", "Moon", "Star", "Sky"], answer: 0 },
+                { q: "'선생님'을 뜻하는 영단어는 무엇일까요?", options: ["Teacher", "Student", "Doctor", "Driver"], answer: 0 },
+                { q: "'친구'를 뜻하는 영단어는 무엇일까요?", options: ["Friend", "Family", "Enemy", "Neighbor"], answer: 0 },
+                { q: "'물'을 뜻하는 영단어는 무엇일까요?", options: ["Water", "Fire", "Air", "Earth"], answer: 0 },
+                { q: "'개/강아지'를 뜻하는 영단어는 무엇일까요?", options: ["Dog", "Cat", "Bird", "Fish"], answer: 0 },
+                { q: "'고양이'를 뜻하는 영단어는 무엇일까요?", options: ["Cat", "Rabbit", "Bear", "Lion"], answer: 0 },
+                { q: "'사랑'을 뜻하는 영단어는 무엇일까요?", options: ["Love", "Hope", "Peace", "Joy"], answer: 0 },
+                { q: "'여름'을 뜻하는 영단어는 무엇일까요?", options: ["Summer", "Winter", "Spring", "Autumn"], answer: 0 },
+                { q: "'우유'를 뜻하는 영단어는 무엇일까요?", options: ["Milk", "Juice", "Coffee", "Tea"], answer: 0 },
+                { q: "'시간'을 뜻하는 영단어는 무엇일까요?", options: ["Time", "Money", "Power", "Work"], answer: 0 },
+                { q: "'가족'을 뜻하는 영단어는 무엇일까요?", options: ["Family", "People", "Group", "Team"], answer: 0 },
+                { q: "'노래'를 뜻하는 영단어는 무엇일까요?", options: ["Song", "Dance", "Music", "Game"], answer: 0 },
+                { q: "'세계/세상'을 뜻하는 영단어는 무엇일까요?", options: ["World", "Country", "City", "Town"], answer: 0 },
+                { q: "'아침'을 뜻하는 영단어는 무엇일까요?", options: ["Morning", "Evening", "Night", "Afternoon"], answer: 0 },
+                { q: "'달'을 뜻하는 영단어는 무엇일까요?", options: ["Moon", "Sun", "Star", "Cloud"], answer: 0 },
+                { q: "'바다'를 뜻하는 영단어는 무엇일까요?", options: ["Sea", "River", "Lake", "Mountain"], answer: 0 }
             ],
             ai: [
-                { q: "1. [AI] 웹 페이지의 구조와 뼈대를 정의하는 언어는?", type: "subjective", answer: ["HTML", "html"] },
-                { q: "2. [AI] AI의 영문 약자 풀네임(Full Name)의 한국어 뜻은?", type: "subjective", answer: ["인공지능", "인공 지능"] },
-                { q: "3. [AI] 블록을 조립하여 프로그래밍하는 방식을 무엇이라 하나요?", type: "subjective", answer: "블록코딩" },
-                { q: "4. [AI] 생성형 AI에게 전달하는 명령어나 질문을 무엇이라 하나요?", options: ["프롬프트", "알고리즘", "데이터셋", "스크립트"], answer: 0 },
-                { q: "5. [AI] 인공지능 학술 용어가 최초로 공식 등장한 연도는?", type: "subjective", answer: ["1956년", "1956"] },
-                { q: "6. [AI] AI가 데이터를 학습해 스스로 패턴을 익히는 기술은?", options: ["머신러닝", "하드웨어", "네트워크", "데이터베이스"], answer: 0 },
-                { q: "7. [AI] 인공지능은 감정이나 마음을 진심으로 느낄 수 있다.", options: ["O", "X"], answer: 1 },
-                { q: "8. [AI] 인공지능은 스스로 데이터를 학습하여 발전할 수 있다.", options: ["O", "X"], answer: 0 },
-                { q: "9. [AI] AI 생성 결과물은 항상 100% 오류 없는 진실만을 출력한다.", options: ["O", "X"], answer: 1 },
-                { q: "10. [AI] 타인의 얼굴/음성을 합성하여 정교한 가짜 영상/음성을 만드는 기술은?", options: ["딥페이크", "클라우드", "파이썬", "블록체인"], answer: 0 },
-                { q: "11. [AI] 자율주행 자동차는 AI 기술에 기반한다.", options: ["O", "X"], answer: 0 },
-                { q: "12. [AI] 학습 데이터의 편향성으로 발생하는 결과의 불공정성을 '데이터 편향성'이라 부른다.", options: ["O", "X"], answer: 0 },
-                { q: "13. [AI] 인공지능 신경망 구조 중 인간 뇌를 모방한 모델은?", options: ["인공신경망", "데이터망", "광통신망", "서버망"], answer: 0 },
-                { q: "14. [AI] ChatGPT와 같은 대형 언어 모델을 뜻하는 약어는?", options: ["LLM", "CPU", "RAM", "GPU"], answer: 0 },
-                { q: "15. [AI] AI는 일상생활과 학습 도구로 누구나 활용할 수 있다.", options: ["O", "X"], answer: 0 }
+                { q: "AI의 약자에서 'A'가 의미하는 단어는 무엇일까요?", options: ["Artificial", "Automated", "Advanced", "Active"], answer: 0 },
+                { q: "컴퓨터가 데이터를 학습하여 스스로 판단하게 하는 기술은?", options: ["머신러닝", "블록체인", "클라우드", "네트워킹"], answer: 0 },
+                { q: "AI가 이미지를 보고 사물을 인식하는 기술 분야는?", options: ["컴퓨터 비전", "음성 합성", "자연어 처리", "데이터베이스"], answer: 0 },
+                { q: "인간의 언어를 컴퓨터가 이해하고 처리하는 AI 기술은?", options: ["자연어 처리(NLP)", "컴퓨터 비전", "사물인터넷", "빅데이터"], answer: 0 },
+                { q: "대규모 언어 모델을 뜻하는 약어 LLM에서 'L'의 의미는?", options: ["Large", "Logic", "Local", "Long"], answer: 0 },
+                { q: "AI에게 지시를 내리기 위해 작성하는 명령어를 무엇이라 할까요?", options: ["프롬프트(Prompt)", "스크립트", "알고리즘", "파이프라인"], answer: 0 },
+                { q: "자율주행 자동차가 도로 상태를 파악할 때 사용하는 센서/AI 기술은?", options: ["자율주행 비전 시스템", "오디오 처리", "문서 요약", "번역기"], answer: 0 },
+                { q: "챗GPT(ChatGPT)처럼 텍스트나 이미지를 새롭게 만들어내는 AI는?", options: ["생성형 AI(Generative AI)", "분석형 AI", "예측형 AI", "제어형 AI"], answer: 0 },
+                { q: "AI 학습에 사용되는 방대한 양의 디지털 정보를 무엇이라 하나요?", options: ["빅데이터(Big Data)", "마이크로칩", "서버 랙", "알고리즘"], answer: 0 },
+                { q: "인간 뇌의 신경망 구조를 모방한 AI 학습 기술은?", options: ["인공신경망(ANN)", "CPU 리소스", "알고리즘 루프", "메모리 맵"], answer: 0 },
+                { q: "AI가 바둑이나 게임에서 스스로 강화하며 학습하는 기법은?", options: ["강화학습", "지도학습", "비지도학습", "분류학습"], answer: 0 },
+                { q: "정답 라벨이 있는 데이터를 주어 AI를 학습시키는 방법은?", options: ["지도학습", "비지도학습", "강화학습", "자율학습"], answer: 0 },
+                { q: "AI가 사람의 얼굴을 식별하는 기술의 명칭은?", options: ["안면 인식(Face Recognition)", "음향 분석", "위치 추적", "텍스트 마이닝"], answer: 0 },
+                { q: "음성 명령(예: 시리, 빅스비)을 알아듣는 AI 기술은?", options: ["음성 인식(Speech Recognition)", "이미지 생성", "비디오 편집", "그래픽 렌더링"], answer: 0 },
+                { q: "AI 편향성(Bias)을 막기 위해 필요한 사회적 기준은?", options: ["AI 윤리(AI Ethics)", "네트워크 속도", "저장장치 용량", "클럭 스피드"], answer: 0 },
+                { q: "사람의 개입 없이 AI 스스로 판단하여 동작하는 능력은?", options: ["자율성(Autonomy)", "가상화", "동기화", "암호화"], answer: 0 },
+                { q: "로봇이 이동하면서 주변 지도를 만들고 위치를 추적하는 기술은?", options: ["SLAM", "SEO", "SDK", "SQL"], answer: 0 },
+                { q: "AI 연산을 빠르게 처리하는 데 자주 쓰이는 그래픽 처리장치는?", options: ["GPU", "RAM", "HDD", "POWER"], answer: 0 },
+                { q: "유튜브나 넷플릭스에서 사용자 취향에 맞게 영상 콘텐츠를 보여주는 AI 기능은?", options: ["추천 시스템(Recommendation)", "검색 알고리즘", "보안 시스템", "압축 알고리즘"], answer: 0 },
+                { q: "AI를 만들고 쓸 때 가장 우선해야 할 가치는 무엇일까요?", options: ["사람 중심의 안전과 윤리", "사용자 몰래 데이터 수집", "무조건 빠른 속도", "개인정보 공개"], answer: 0 }
             ]
         };
 
-        
-
+        // Global State Variables
         let currentSubject = 'history';
         let floorSteps = 0;
         let solvedQuizTotal = 0;
-        let isGateActive = false;
-        let isOptionLocked = false;
-        let isEndlessMode = false;
-        let victoryTriggered = false;
         let isGameOver = false;
-        let gameRunning = false;
+        let victoryTriggered = false;
+        let activeQuizTimer = null;
 
-        let quizTimerId = null;
-        let quizTimeLeft = 15;
+        // Key Input States
+        const keyState = {};
 
-        let scene = null, camera = null, renderer = null;
-        let player3D = null;
-        let legL = null, legR = null, armL = null, armR = null;
-        let platformObjects = [];
-        let animationFrameId = null;
-        const clock = new THREE.Clock();
-
-        let playerVelocity = { x: 0, y: 0, z: 0 };
-        let onGround = false;
-        let standingOn = null;
-        let lastStandX = 0;
-        let keyState = {};
-
-        const STEP_HEIGHT = 1.8;
-        const STEP_DEPTH = 3.0;
-        const GRAVITY = -30.0;
-        const JUMP_VY = 12.5;   // 점프 초기 속도 (1칸 위까지 닿는 높이)
-        const HOP_VZ = 4.6;     // 앞으로 도약하는 속도 (다음 발판까지 거리 3칸)
-        const HOP_VX = 2.8;     // 좌우 대각선 도약 속도 (발판 한 칸 옆으로 이동)
-        const WALK_SPEED = 3.2; // 발판 위 좌우 걷기 속도
-        const FALL_MARGIN = 7.0;
-        const REACH = { wakp: 0.95, slang: 1.3, keycap: 0.95 };
-
-        // 오디오 시스템 (Web Audio API)
+        // Audio Context Helper
         let audioCtx = null;
         function getAudioContext() {
             if (!audioCtx) {
@@ -430,29 +376,33 @@
             return audioCtx;
         }
 
-        // 실물 ASMR 특성을 반영한 3D 발판 타격음 오디오 합성기
+        // ==========================================
+        // 2. 오디오 합성기 (Web Audio API ASMR)
+        // ==========================================
         function playStepSound(type) {
             try {
                 const ctx = getAudioContext();
                 const now = ctx.currentTime;
 
                 if (type === 'wakp') {
+                    // [우뿌]: 말랑하고 깊은 '우부욱-퐁' 묵직한 공기 마찰 + 물컹음
                     const osc = ctx.createOscillator();
                     const gain = ctx.createGain();
                     osc.type = 'sine';
-                    osc.frequency.setValueAtTime(480, now);
-                    osc.frequency.exponentialRampToValueAtTime(75, now + 0.15);
+                    osc.frequency.setValueAtTime(340, now);
+                    osc.frequency.exponentialRampToValueAtTime(50, now + 0.22);
 
-                    gain.gain.setValueAtTime(0.4, now);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+                    gain.gain.setValueAtTime(0.65, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
 
                     osc.connect(gain);
                     gain.connect(ctx.destination);
                     osc.start(now);
-                    osc.stop(now + 0.15);
+                    osc.stop(now + 0.22);
 
                 } else if (type === 'slang') {
-                    const bufferSize = ctx.sampleRate * 0.12;
+                    // [슬랑이]: 쫀득한 슬라임 찰싹 착지음
+                    const bufferSize = ctx.sampleRate * 0.15;
                     const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
                     const data = buffer.getChannelData(0);
                     for (let i = 0; i < bufferSize; i++) {
@@ -464,22 +414,23 @@
 
                     const filter = ctx.createBiquadFilter();
                     filter.type = 'bandpass';
-                    filter.frequency.setValueAtTime(1800, now);
-                    filter.Q.setValueAtTime(3.0, now);
+                    filter.frequency.setValueAtTime(1100, now);
+                    filter.Q.setValueAtTime(4.5, now);
 
                     const noiseGain = ctx.createGain();
-                    noiseGain.gain.setValueAtTime(0.35, now);
-                    noiseGain.gain.exponentialRampToValueAtTime(0.005, now + 0.12);
+                    noiseGain.gain.setValueAtTime(0.55, now);
+                    noiseGain.gain.exponentialRampToValueAtTime(0.005, now + 0.15);
 
                     noise.connect(filter);
                     filter.connect(noiseGain);
                     noiseGain.connect(ctx.destination);
 
                     noise.start(now);
-                    noise.stop(now + 0.12);
+                    noise.stop(now + 0.15);
 
                 } else {
-                    const bufferSize = ctx.sampleRate * 0.04;
+                    // [키캡]: 고급 기계식 스위치 바닥 치는 '딸깍/자각' 선명한 타건음
+                    const bufferSize = ctx.sampleRate * 0.035;
                     const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
                     const data = buffer.getChannelData(0);
                     for (let i = 0; i < bufferSize; i++) {
@@ -491,20 +442,55 @@
 
                     const filter = ctx.createBiquadFilter();
                     filter.type = 'highpass';
-                    filter.frequency.setValueAtTime(2500, now);
+                    filter.frequency.setValueAtTime(3200, now);
 
                     const clickGain = ctx.createGain();
-                    clickGain.gain.setValueAtTime(0.3, now);
-                    clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+                    clickGain.gain.setValueAtTime(0.5, now);
+                    clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
 
                     click.connect(filter);
                     filter.connect(clickGain);
                     clickGain.connect(ctx.destination);
 
                     click.start(now);
-                    click.stop(now + 0.04);
+                    click.stop(now + 0.035);
                 }
             } catch (e) {
+                console.log(e);
+            }
+        }
+
+        function playBreakSound() {
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+
+                const bufferSize = ctx.sampleRate * 0.25;
+                const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 2);
+                }
+
+                const source = ctx.createBufferSource();
+                source.buffer = buffer;
+
+                const filter = ctx.createBiquadFilter();
+                filter.type = 'highpass';
+                filter.frequency.setValueAtTime(900, now);
+                filter.frequency.exponentialRampToValueAtTime(200, now + 0.25);
+
+                const gain = ctx.createGain();
+                gain.gain.setValueAtTime(0.65, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+
+                source.connect(filter);
+                filter.connect(gain);
+                gain.connect(ctx.destination);
+
+                source.start(now);
+                source.stop(now + 0.25);
+            } catch(e) {
                 console.log(e);
             }
         }
@@ -513,386 +499,392 @@
             try {
                 const ctx = getAudioContext();
                 const now = ctx.currentTime;
-                const notes = [261.63, 329.63, 392.00, 523.25, 659.25];
+                const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99]; // C E G C E G
+                
                 notes.forEach((freq, idx) => {
                     const osc = ctx.createOscillator();
                     const gain = ctx.createGain();
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(freq, now + idx * 0.12);
-                    gain.gain.setValueAtTime(0.25, now + idx * 0.12);
-                    gain.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.12 + 0.35);
+
+                    gain.gain.setValueAtTime(0.4, now + idx * 0.12);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.5);
+
                     osc.connect(gain);
                     gain.connect(ctx.destination);
                     osc.start(now + idx * 0.12);
-                    osc.stop(now + idx * 0.12 + 0.35);
+                    osc.stop(now + idx * 0.12 + 0.5);
                 });
-            } catch (e) {
+            } catch(e) {
                 console.log(e);
             }
         }
 
-        
+        // ==========================================
+        // 3. Three.js 3D 그래픽 및 월드 구성
+        // ==========================================
+        let scene, camera, renderer;
+        let player3D, playerMeshGroup;
+        let platformObjects = [];
+        let breakParticles = [];
+        let clock = new THREE.Clock();
 
-        // 게임 시작
-        function getResultLabel() {
-            return currentSubject === 'history' ? '역사' : (currentSubject === 'english' ? '영어' : 'AI');
-        }
+        const STEP_HEIGHT = 1.8;
+        let playerVelocity = { x: 0, y: 0, z: 0 };
+        let onGround = false;
+        let standingOn = null;
 
-        function showScreen(screenId) {
-            clearQuizTimer();
-            ['screen-main', 'screen-explain', 'screen-select', 'screen-game', 'screen-result'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.classList.add('hidden');
-            });
-            document.getElementById('modal-fall').classList.add('hidden');
-            document.getElementById('modal-victory').classList.add('hidden');
-            const target = document.getElementById(screenId);
-            if (target) target.classList.remove('hidden');
-            gameRunning = screenId === 'screen-game';
-        }
+        function initThreeJS() {
+            const container = document.getElementById('canvas-container');
+            container.innerHTML = '';
 
-        function goHome() {
-            showScreen('screen-main');
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-                animationFrameId = null;
-            }
-        }
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xfbcfe8);
+            scene.fog = new THREE.FogExp2(0xfbcfe8, 0.015);
 
-        function startGame(subject) {
-            currentSubject = subject;
-            floorSteps = 0;
-            solvedQuizTotal = 0;
-            isGateActive = false;
-            isGameOver = false;
-            isEndlessMode = false;
-            victoryTriggered = false;
-            isOptionLocked = false;
-            keyState = {};
-
-            document.getElementById('game-cat-badge').innerText = getResultLabel();
-            document.getElementById('platform-step-count').innerText = '0';
-            document.getElementById('quiz-solved-count').innerText = '0';
-            document.getElementById('quiz-post-overlay').classList.add('hidden');
-
-            showScreen('screen-game');
-            init3DGame();
-        }
-
-        function continueEndlessMode() {
-            isEndlessMode = true;
-            isGateActive = false;
-            isGameOver = false;
-            showScreen('screen-game');
-        }
-
-        // 떨어진 발판(마지막으로 밟은 발판)에서 다시 시작
-        function restartGame() {
-            const target = platformObjects.find(p => p.userData.id === floorSteps) || platformObjects[0];
-            restorePlatform(target);
-            document.getElementById('modal-fall').classList.add('hidden');
-
-            player3D.position.set(target.position.x, platformTop(target), target.position.z);
-            playerVelocity = { x: 0, y: 0, z: 0 };
-            onGround = true;
-            standingOn = target;
-            lastStandX = target.position.x;
-            keyState = {};
-            isGameOver = false;
-        }
-
-        function restorePlatform(p) {
-            const ud = p.userData;
-            ud.gone = false;
-            ud.stepped = false;
-            ud.vanishTimer = 1.5;
-            ud.squash = 1;
-            ud.squashV = 0;
-            p.visible = true;
-        }
-
-        // 3D 발판 생성 함수들
-        function createWakpPlatform() {
-            const group = new THREE.Group();
-            const colors = [0xFFB6C1, 0x87CEEB, 0xFFE494];
-            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
             
-            const mat = new THREE.MeshPhongMaterial({ 
-                color: randomColor, 
-                shininess: 90,
-                specular: 0x444444
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            container.appendChild(renderer.domElement);
+
+            // Lighting Setup
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            scene.add(ambientLight);
+
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            dirLight.position.set(10, 20, 15);
+            dirLight.castShadow = true;
+            dirLight.shadow.mapSize.width = 1024;
+            dirLight.shadow.mapSize.height = 1024;
+            scene.add(dirLight);
+
+            // Create Glass Ball Character (귀여운 얼굴 유리공 캐릭터)
+            createPlayerCharacter();
+
+            // Create 100 Tower Platforms
+            generateTowerPlatforms();
+
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function createPlayerCharacter() {
+            player3D = new THREE.Group();
+
+            // Translucent Glass Sphere Mesh
+            const sphereGeo = new THREE.SphereGeometry(0.75, 32, 32);
+            const glassMat = new THREE.MeshPhysicalMaterial({
+                color: 0xffffff,
+                transmission: 0.85,
+                opacity: 1,
+                transparent: true,
+                roughness: 0.1,
+                ior: 1.4,
+                reflectivity: 0.8,
+                clearcoat: 1.0,
+                clearcoatRoughness: 0.1
             });
-            const geo = new THREE.SphereGeometry(1.0, 32, 32);
+
+            playerMeshGroup = new THREE.Mesh(sphereGeo, glassMat);
+            playerMeshGroup.castShadow = true;
+            player3D.add(playerMeshGroup);
+
+            // Facial Features Group
+            const faceGroup = new THREE.Group();
+            
+            // Eyes
+            const eyeGeo = new THREE.SphereGeometry(0.08, 16, 16);
+            const eyeMat = new THREE.MeshBasicMaterial({ color: 0x374151 });
+            
+            const leftEye = new THREE.Mesh(eyeGeo, eyeMat);
+            leftEye.position.set(-0.25, 0.1, 0.68);
+            const rightEye = new THREE.Mesh(eyeGeo, eyeMat);
+            rightEye.position.set(0.25, 0.1, 0.68);
+            faceGroup.add(leftEye, rightEye);
+
+            // Blush Cheeks
+            const cheekGeo = new THREE.SphereGeometry(0.1, 16, 16);
+            const cheekMat = new THREE.MeshBasicMaterial({ color: 0xf472b6 });
+            
+            const leftCheek = new THREE.Mesh(cheekGeo, cheekMat);
+            leftCheek.position.set(-0.38, -0.05, 0.63);
+            const rightCheek = new THREE.Mesh(cheekGeo, cheekMat);
+            rightCheek.position.set(0.38, -0.05, 0.63);
+            faceGroup.add(leftCheek, rightCheek);
+
+            player3D.add(faceGroup);
+            player3D.position.set(0, 1.2, 0);
+            scene.add(player3D);
+        }
+
+        function createWakpMesh(colors) {
+            const group = new THREE.Group();
+            const chosenColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            // 왁뿌 - 파스텔 구체 (Sphere)
+            const geo = new THREE.SphereGeometry(1.2, 32, 32);
+            const mat = new THREE.MeshPhongMaterial({
+                color: chosenColor,
+                shininess: 90,
+                specular: 0xffffff
+            });
             const mesh = new THREE.Mesh(geo, mat);
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
             group.add(mesh);
 
-            const knotGeo = new THREE.SphereGeometry(0.2, 12, 12);
-            const knotMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.85 });
-            const knot = new THREE.Mesh(knotGeo, knotMat);
-            knot.position.y = 1.0;
-            group.add(knot);
-
+            // Crack Wireframe Overlay Group
             const crackGroup = new THREE.Group();
             crackGroup.name = "crackEffectGroup";
 
             for (let i = 0; i < 8; i++) {
                 const points = [];
-                let currentPoint = new THREE.Vector3((Math.random() - 0.5) * 0.2, 1.0, (Math.random() - 0.5) * 0.2);
-                points.push(currentPoint.clone());
-
-                for (let s = 0; s < 3; s++) {
-                    currentPoint.add(new THREE.Vector3((Math.random() - 0.5) * 0.4, -0.3, (Math.random() - 0.5) * 0.4));
-                    currentPoint.normalize().multiplyScalar(1.02);
-                    points.push(currentPoint.clone());
+                let currPos = new THREE.Vector3(0, 1.2, 0);
+                points.push(currPos.clone());
+                
+                const angle = (i / 8) * Math.PI * 2;
+                for (let j = 0; j < 4; j++) {
+                    currPos.x += Math.cos(angle + (Math.random() - 0.5) * 0.5) * 0.3;
+                    currPos.y -= 0.25;
+                    currPos.z += Math.sin(angle + (Math.random() - 0.5) * 0.5) * 0.3;
+                    points.push(currPos.clone());
                 }
 
                 const lineGeo = new THREE.BufferGeometry().setFromPoints(points);
-                const lineMat = new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0 });
-                crackGroup.add(new THREE.Line(lineGeo, lineMat));
+                const lineMat = new THREE.LineBasicMaterial({
+                    color: 0xffffff,
+                    linewidth: 2,
+                    transparent: true,
+                    opacity: 0
+                });
+                const line = new THREE.Line(lineGeo, lineMat);
+                crackGroup.add(line);
             }
+
             group.add(crackGroup);
             return group;
         }
 
-        
-        function createSlangPlatform() {
+        function createSlangMesh() {
             const group = new THREE.Group();
-            const mat = new THREE.MeshPhongMaterial({ color: 0xFFF2A1, shininess: 60 });
-            const geo = new THREE.BoxGeometry(2.6, 0.5, 1.8);
+            
+            // 슬랑이 - 긴 버터 스퀴시 직사각형
+            const geo = new THREE.BoxGeometry(3.2, 0.7, 1.4);
+            const mat = new THREE.MeshPhongMaterial({
+                color: 0xfef08a,
+                roughness: 0.3,
+                shininess: 60
+            });
             const mesh = new THREE.Mesh(geo, mat);
             mesh.name = "slangMesh";
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
             group.add(mesh);
+
             return group;
         }
 
-        
-
-        // 키캡 한 개짜리 발판 (밟으면 눌렸다가 튀어나옴)
-        function createKeycapPlatform() {
+        function createKeycapMesh() {
             const group = new THREE.Group();
-            const geo = new THREE.BoxGeometry(1.5, 0.5, 1.5);
-            geo.translate(0, 0.25, 0); // 밑면이 원점이 되도록 (눌림 연출 기준점)
-            const cap = new THREE.Mesh(geo, new THREE.MeshPhongMaterial({ color: 0xFFB7C5, shininess: 40 }));
-            cap.position.y = -0.25;
-            cap.name = 'keycapMesh';
+            const keyColors = [0x93c5fd, 0xfbcfe8, 0xfef08a, 0xc084fc, 0xa7f3d0];
 
-            const top = new THREE.Mesh(
-                new THREE.BoxGeometry(1.1, 0.06, 1.1),
-                new THREE.MeshPhongMaterial({ color: 0xFFE4EC, shininess: 60 })
-            );
-            top.position.y = 0.53;
-            cap.add(top);
-
-            group.add(cap);
-            return group;
-        }
-
-        // 발판 윗면 높이 (발이 닿는 높이)
-        function platformTop(p) {
-            const ud = p.userData;
-            if (ud.type === 'wakp') return p.position.y + 1.0;
-            if (ud.type === 'slang') return p.position.y + 0.25 * ud.squash;
-            return p.position.y - 0.25 + 0.5 * ud.squash;
-        }
-
-        function isOverPlatform(p, x, z) {
-            const r = REACH[p.userData.type];
-            return Math.abs(x - p.position.x) < r && Math.abs(z - p.position.z) < r;
-        }
-
-        // 사람 모양 캐릭터 (파란색, 발 위치가 원점)
-        function createPlayerModel() {
-            const group = new THREE.Group();
-            const shirtMat = new THREE.MeshPhongMaterial({ color: 0x2563eb, shininess: 50 });
-            const pantsMat = new THREE.MeshPhongMaterial({ color: 0x1e3a8a, shininess: 30 });
-            const skinMat = new THREE.MeshPhongMaterial({ color: 0x60a5fa, shininess: 40 });
-            const hairMat = new THREE.MeshPhongMaterial({ color: 0x1e3a8a });
-            const shoeMat = new THREE.MeshPhongMaterial({ color: 0x0f172a });
-
-            const torso = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.6, 0.28), shirtMat);
-            torso.position.set(0, 0.85, 0);
-            group.add(torso);
-
-            const head = new THREE.Mesh(new THREE.SphereGeometry(0.22, 24, 24), skinMat);
-            head.position.set(0, 1.36, 0);
-            group.add(head);
-
-            const hair = new THREE.Mesh(new THREE.SphereGeometry(0.235, 24, 24, 0, Math.PI * 2, 0, Math.PI * 0.5), hairMat);
-            hair.position.set(0, 1.38, 0);
-            group.add(hair);
-
-            function limb(x, pivotY, length, width, mat, isLeg) {
-                const pivot = new THREE.Group();
-                pivot.position.set(x, pivotY, 0);
-                const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, length, isLeg ? 0.22 : 0.18), mat);
-                mesh.position.y = -length / 2;
-                pivot.add(mesh);
-                if (isLeg) {
-                    const shoe = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.1, 0.3), shoeMat);
-                    shoe.position.set(0, -length - 0.05, -0.03);
-                    pivot.add(shoe);
+            // 키캡 - 3x3 큐브
+            for (let r = 0; r < 3; r++) {
+                for (let c = 0; c < 3; c++) {
+                    const keyGeo = new THREE.BoxGeometry(0.7, 0.45, 0.7);
+                    const color = keyColors[(r * 3 + c) % keyColors.length];
+                    const keyMat = new THREE.MeshPhongMaterial({ color: color });
+                    const keyMesh = new THREE.Mesh(keyGeo, keyMat);
+                    
+                    keyMesh.position.set((c - 1) * 0.8, 0, (r - 1) * 0.8);
+                    keyMesh.castShadow = true;
+                    keyMesh.receiveShadow = true;
+                    group.add(keyMesh);
                 }
-                group.add(pivot);
-                return pivot;
             }
-
-            armL = limb(-0.34, 1.12, 0.55, 0.16, shirtMat, false);
-            armR = limb(0.34, 1.12, 0.55, 0.16, shirtMat, false);
-            legL = limb(-0.13, 0.55, 0.55, 0.2, pantsMat, true);
-            legR = limb(0.13, 0.55, 0.55, 0.2, pantsMat, true);
 
             return group;
         }
 
-        function updatePlayerPose(dt) {
-            if (!player3D || !legL) return;
-            const t = clock.getElapsedTime();
-            let legT = 0, armT = 0;
-            if (!onGround) {
-                legT = 0.5;
-                armT = -2.6;
-            } else if (player3D.userData.walking) {
-                legT = Math.sin(t * 12) * 0.6;
-                armT = -Math.sin(t * 12) * 0.5;
-            }
-            const legRT = onGround ? -legT : legT;
-            const armRT = onGround ? -armT : armT;
-            const k = Math.min(1, dt * 12);
-            legL.rotation.x += (legT - legL.rotation.x) * k;
-            legR.rotation.x += (legRT - legR.rotation.x) * k;
-            armL.rotation.x += (armT - armL.rotation.x) * k;
-            armR.rotation.x += (armRT - armR.rotation.x) * k;
-        }
-
-        function init3DGame() {
-            const container = document.getElementById('game3dContainer');
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-                animationFrameId = null;
-            }
-
-            const w = container.clientWidth || window.innerWidth;
-            const h = container.clientHeight || window.innerHeight;
-
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0xFFE6EB);
-
-            camera = new THREE.PerspectiveCamera(55, w / h, 0.1, 1000);
-            if (!renderer) {
-                renderer = new THREE.WebGLRenderer({ antialias: true });
-            }
-            renderer.setSize(w, h);
-            if (!container.contains(renderer.domElement)) {
-                container.innerHTML = '';
-                container.appendChild(renderer.domElement);
-            }
-
-            scene.add(new THREE.AmbientLight(0xffffff, 0.7));
-            const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
-            dirLight.position.set(10, 20, 15);
-            scene.add(dirLight);
-
-            player3D = createPlayerModel();
-            scene.add(player3D);
-
+        function generateTowerPlatforms() {
+            platformObjects.forEach(p => scene.remove(p));
             platformObjects = [];
-            const types = ['wakp', 'slang', 'keycap'];
-            let typeIdx = 0;
-            let posX = 0;
-            let posZ = 0;
 
-            for (let i = 0; i <= 105; i++) {
-                if (i > 0 && i % 5 === 0) typeIdx = (typeIdx + 1) % types.length;
-                const type = types[typeIdx];
-                const pObj = type === 'wakp' ? createWakpPlatform()
-                    : (type === 'slang' ? createSlangPlatform() : createKeycapPlatform());
+            const wakpColors = [0xf472b6, 0x38bdf8, 0xfde047];
 
-                if (i > 0) {
-                    const dirPattern = i % 4;
-                    if (dirPattern === 1) posX += 1.8;
-                    else if (dirPattern === 3) posX -= 1.8;
-                    posZ -= STEP_DEPTH;
+            // Initial Start Ground Platform
+            const startGeo = new THREE.BoxGeometry(4.5, 0.6, 4.5);
+            const startMat = new THREE.MeshPhongMaterial({ color: 0xf472b6 });
+            const startPlatform = new THREE.Mesh(startGeo, startMat);
+            startPlatform.position.set(0, 0, 0);
+            startPlatform.userData = { id: 0, type: 'start' };
+            scene.add(startPlatform);
+            platformObjects.push(startPlatform);
+
+            // Generate 100 Tower Platforms
+            for (let i = 1; i <= 100; i++) {
+                let platformMesh;
+                let typeStr = '';
+
+                // 5칸 단위 발판 변경: 1~5 왁뿌, 6~10 슬랑이, 11~15 키캡 ...
+                const groupIdx = Math.floor((i - 1) / 5) % 3;
+                if (groupIdx === 0) {
+                    typeStr = 'wakp';
+                    platformMesh = createWakpMesh(wakpColors);
+                } else if (groupIdx === 1) {
+                    typeStr = 'slang';
+                    platformMesh = createSlangMesh();
+                } else {
+                    typeStr = 'keycap';
+                    platformMesh = createKeycapMesh();
                 }
 
-                const isMoving = i > 12 && i % 3 === 0;
-                const isDisappearing = i > 18 && i % 7 === 0;
+                // Layout with variations
+                const posY = i * STEP_HEIGHT;
+                let posX = (Math.sin(i * 0.7) * 2.5); // 지그재그 일자식 배치
+                let posZ = -i * 3.2; // 전방을 향해 늘어섬
 
-                pObj.position.set(posX, i * STEP_HEIGHT, posZ);
-                pObj.userData = {
+                // Dynamic difficulties
+                const isMoving = (i > 15 && i % 4 === 0);
+                const isDisappearing = (i > 25 && i % 6 === 0);
+
+                platformMesh.position.set(posX, posY, posZ);
+                platformMesh.userData = {
                     id: i,
-                    type: type,
+                    type: typeStr,
                     baseX: posX,
+                    baseY: posY,
+                    baseZ: posZ,
                     isMoving: isMoving,
-                    moveSpeed: 1.5 + i * 0.02,
+                    moveSpeed: 1.5 + Math.random() * 1.5,
                     isDisappearing: isDisappearing,
                     stepped: false,
                     vanishTimer: 1.5,
-                    gone: false,
-                    squash: 1,
-                    squashV: 0,
-                    crackHitTime: -99
+                    shattered: false
                 };
-                scene.add(pObj);
-                platformObjects.push(pObj);
+
+                scene.add(platformMesh);
+                platformObjects.push(platformMesh);
             }
-
-            const p0 = platformObjects[0];
-            player3D.position.set(p0.position.x, platformTop(p0), p0.position.z);
-            playerVelocity = { x: 0, y: 0, z: 0 };
-            onGround = true;
-            standingOn = p0;
-            lastStandX = p0.position.x;
-            keyState = {};
-
-            camera.position.set(0, 6.5, 11);
-            camera.lookAt(0, 1, 0);
-
-            clock.start();
-            animate3D();
         }
 
-        function animate3D() {
-            animationFrameId = requestAnimationFrame(animate3D);
-            const dt = Math.min(clock.getDelta(), 0.05);
+        // 왁뿌 전용 파괴 효과: 구체 표면에서 크고 작은 조각이 여러 방향으로 튀어나감
+        function createWakpBurst(platform) {
+            playBreakSound();
+            const body = platform.children[0];
+            const color = body.material.color.clone();
+            const burst = new THREE.Group();
+            const mat = new THREE.MeshPhongMaterial({ color: color, shininess: 90, specular: 0xffffff });
 
-            updatePlatformAnimations(dt);
-
-            if (gameRunning && !isGateActive && !isGameOver) {
-                update3DPhysics(dt);
-            } else if (standingOn) {
-                lastStandX = standingOn.position.x;
+            for (let i = 0; i < 28; i++) {
+                const radius = 0.14 + Math.random() * 0.24;
+                const mesh = new THREE.Mesh(new THREE.SphereGeometry(radius, 8, 8), mat);
+                const dir = new THREE.Vector3(Math.random() - 0.5, Math.random() * 0.9 + 0.1, Math.random() - 0.5).normalize();
+                mesh.position.copy(platform.position).add(new THREE.Vector3(0, 1.2, 0)).add(dir.clone().multiplyScalar(0.9));
+                mesh.userData = {
+                    vx: dir.x * 6.5,
+                    vy: dir.y * 7.0 + 2.0,
+                    vz: dir.z * 6.5,
+                    rotX: Math.random() * 8,
+                    rotY: Math.random() * 8,
+                    life: 1.0
+                };
+                burst.add(mesh);
             }
 
-            updatePlayerPose(dt);
-            updateCamera();
-            renderer.render(scene, camera);
+            scene.add(burst);
+            breakParticles.push(burst);
+        }
+
+        function createShatterEffect(position, color = 0xfca5a5) {
+            playBreakSound();
+
+            const particleGroup = new THREE.Group();
+            const fragmentCount = 14;
+            const geo = new THREE.BoxGeometry(0.25, 0.25, 0.25);
+            const mat = new THREE.MeshPhongMaterial({ color: color, roughness: 0.8 });
+
+            for (let i = 0; i < fragmentCount; i++) {
+                const mesh = new THREE.Mesh(geo, mat);
+                mesh.position.set(
+                    position.x + (Math.random() - 0.5) * 1.2,
+                    position.y + (Math.random() - 0.5) * 0.4,
+                    position.z + (Math.random() - 0.5) * 1.2
+                );
+
+                mesh.userData = {
+                    vx: (Math.random() - 0.5) * 7.0,
+                    vy: Math.random() * 5.0 + 3.0,
+                    vz: (Math.random() - 0.5) * 7.0,
+                    rotX: Math.random() * 10,
+                    rotY: Math.random() * 10,
+                    life: 1.0
+                };
+                particleGroup.add(mesh);
+            }
+
+            scene.add(particleGroup);
+            breakParticles.push(particleGroup);
         }
 
         function updatePlatformAnimations(dt) {
             const time = clock.getElapsedTime();
 
-            platformObjects.forEach(p => {
-                const ud = p.userData;
+            // 파편 물리 애니메이션
+            for (let i = breakParticles.length - 1; i >= 0; i--) {
+                const group = breakParticles[i];
+                let allDead = true;
 
-                if (ud.isMoving) {
-                    p.position.x = ud.baseX + Math.sin(time * ud.moveSpeed) * 2.2;
+                group.children.forEach(p => {
+                    if (p.userData.life > 0) {
+                        allDead = false;
+                        p.position.x += p.userData.vx * dt;
+                        p.position.y += p.userData.vy * dt;
+                        p.position.z += p.userData.vz * dt;
+
+                        p.userData.vy -= 18.0 * dt;
+                        p.rotation.x += p.userData.rotX * dt;
+                        p.rotation.y += p.userData.rotY * dt;
+
+                        p.userData.life -= dt * 1.6;
+                        p.scale.setScalar(Math.max(0, p.userData.life));
+                    }
+                });
+
+                if (allDead) {
+                    scene.remove(group);
+                    breakParticles.splice(i, 1);
+                }
+            }
+
+            platformObjects.forEach(p => {
+                // 1. 움직이는 발판
+                if (p.userData.isMoving) {
+                    const offset = Math.sin(time * p.userData.moveSpeed) * 2.2;
+                    p.position.x = p.userData.baseX + offset;
                 }
 
-                // 사라지는 발판: 밟은 뒤 1.5초 후 사라짐 (마지막 0.6초 동안 깜빡임)
-                if (ud.isDisappearing && ud.stepped && !ud.gone) {
-                    ud.vanishTimer -= dt;
-                    if (ud.vanishTimer <= 0) {
-                        ud.gone = true;
-                        p.visible = false;
-                    } else {
-                        p.visible = ud.vanishTimer > 0.6 || Math.floor(ud.vanishTimer * 10) % 2 === 0;
+                // 2. 사라지는 발판
+                if (p.userData.isDisappearing && p.userData.stepped) {
+                    p.userData.vanishTimer -= dt;
+                    p.position.x += (Math.random() - 0.5) * 0.08;
+
+                    if (p.userData.vanishTimer <= 0.3 && !p.userData.shattered) {
+                        p.userData.shattered = true;
+                        createShatterEffect(p.position, 0xef4444);
+                        p.position.y = -999;
                     }
                 }
 
-                if (ud.type === 'wakp') {
-                    const crackGroup = p.getObjectByName('crackEffectGroup');
+                // 3. 착지 반응 애니메이션
+                if (p.userData.type === 'wakp') {
+                    const crackGroup = p.getObjectByName("crackEffectGroup");
                     if (crackGroup) {
-                        if (time - ud.crackHitTime < 2.0) {
+                        const hitTime = p.userData.crackHitTime || 0;
+                        if (time - hitTime < 2.0) {
                             crackGroup.children.forEach(line => line.material.opacity = 1.0);
                         } else {
                             crackGroup.children.forEach(line => {
@@ -900,306 +892,379 @@
                             });
                         }
                     }
-                } else {
-                    // 눌렸다가 튀어나오는 스프링 연출
-                    const acc = -180 * (ud.squash - 1) - 14 * ud.squashV;
-                    ud.squashV += acc * dt;
-                    ud.squash += ud.squashV * dt;
-                    ud.squash = Math.max(0.3, ud.squash);
+                }
 
-                    const mesh = p.getObjectByName(ud.type === 'slang' ? 'slangMesh' : 'keycapMesh');
-                    if (mesh) mesh.scale.y = ud.squash;
+                if (p.userData.type === 'wakp' && p.children[0]) {
+                    const body = p.children[0];
+                    body.scale.x += (1 - body.scale.x) * 9.0 * dt;
+                    body.scale.y += (1 - body.scale.y) * 9.0 * dt;
+                    body.scale.z += (1 - body.scale.z) * 9.0 * dt;
+                }
+
+                if (p.userData.type === 'slang') {
+                    const slangMesh = p.getObjectByName("slangMesh");
+                    if (slangMesh) {
+                        slangMesh.scale.y += (1.0 - slangMesh.scale.y) * 10.0 * dt;
+                    }
                 }
             });
         }
 
         function update3DPhysics(dt) {
-            const left = keyState['ArrowLeft'] || keyState['Home'] || keyState['KeyA'];
-            const right = keyState['ArrowRight'] || keyState['End'] || keyState['KeyD'];
-            const hopKey = keyState['Space'] || keyState['KeyK'] || keyState['ArrowUp'] ||
-                           keyState['PageUp'] || keyState['KeyW'];
-            const dirX = (right ? 1 : 0) - (left ? 1 : 0);
+            if (isGameOver || quizOpen) return;
 
-            player3D.userData.walking = false;
+            // 움직이는 발판 위에 서 있으면 발판과 함께 이동
+            if (standingOn && onGround) {
+                player3D.position.x += standingOn.position.x - standingOn.userData.lastX;
+            }
+            if (standingOn) standingOn.userData.lastX = standingOn.position.x;
 
-            if (onGround) {
-                if (hopKey) {
-                    // 점프: 앞(-z)으로 도약, 좌우 키를 함께 누르면 대각선 도약
-                    playerVelocity = { x: dirX * HOP_VX, y: JUMP_VY, z: -HOP_VZ };
-                    onGround = false;
-                    standingOn = null;
-                } else {
-                    if (standingOn) {
-                        // 움직이는 발판 위에서는 발판과 함께 이동
-                        if (standingOn.userData.isMoving) {
-                            player3D.position.x += standingOn.position.x - lastStandX;
+            const moveSpeed = 8.5;
+            const jumpForce = 12.5;
+            const gravity = -26.0;
+
+            let moveX = 0;
+            let moveZ = 0;
+
+            if (keyState['ArrowUp'] || keyState['KeyW']) moveZ -= 1;
+            if (keyState['ArrowDown'] || keyState['KeyS']) moveZ += 1;
+            if (keyState['ArrowLeft'] || keyState['KeyA']) moveX -= 1;
+            if (keyState['ArrowRight'] || keyState['KeyD']) moveX += 1;
+
+            player3D.position.x += moveX * moveSpeed * dt;
+            player3D.position.z += moveZ * moveSpeed * dt;
+
+            if ((keyState['Space'] || keyState['KeyK']) && onGround) {
+                playerVelocity.y = jumpForce;
+                onGround = false;
+            }
+
+            playerVelocity.y += gravity * dt;
+            player3D.position.y += playerVelocity.y * dt;
+
+            let landed = false;
+
+            for (let p of platformObjects) {
+                if (p.position.y < -500) continue;
+
+                const px = p.position.x;
+                const py = p.position.y + (p.userData.type === 'wakp' ? 1.2 : 0.35);
+                const pz = p.position.z;
+
+                const dx = Math.abs(player3D.position.x - px);
+                const dz = Math.abs(player3D.position.z - pz);
+
+                if (
+                    dx < 1.6 &&
+                    dz < 1.6 &&
+                    player3D.position.y - 0.75 <= py + 0.3 &&
+                    player3D.position.y - 0.75 >= py - 0.6 &&
+                    playerVelocity.y <= 0
+                ) {
+                    player3D.position.y = py + 0.75;
+                    playerVelocity.y = 0;
+                    landed = true;
+                    standingOn = p;
+                    p.userData.lastX = p.position.x;
+
+                    if (!onGround) {
+                        onGround = true;
+                        playStepSound(p.userData.type);
+
+                        // 밟음 효과
+                        if (p.userData.type === 'keycap') {
+                            createShatterEffect(p.position, 0x93c5fd);
+                        } else if (p.userData.type === 'wakp') {
+                            createWakpBurst(p);
+                            if (p.children[0]) p.children[0].scale.set(1.25, 0.55, 1.25);
                         }
-                        lastStandX = standingOn.position.x;
+
+                        if (p.userData.isDisappearing) {
+                            p.userData.stepped = true;
+                        }
+
+                        if (p.userData.type === 'wakp') {
+                            p.userData.crackHitTime = clock.getElapsedTime();
+                        }
+
+                        if (p.userData.type === 'slang') {
+                            const slangMesh = p.getObjectByName("slangMesh");
+                            if (slangMesh) slangMesh.scale.set(1.15, 0.35, 1.15);
+                        }
+
+                        if (p.userData.id > floorSteps) {
+                            floorSteps = p.userData.id;
+                            document.getElementById('platform-step-count').innerText = floorSteps;
+
+                            // 5칸마다 관문 퀴즈 트리거
+                            if (floorSteps > 0 && floorSteps % 5 === 0 && floorSteps < 100) {
+                                triggerGateQuiz();
+                            }
+
+                            // 100층 도달 승리
+                            if (floorSteps === 100 && !victoryTriggered) {
+                                victoryTriggered = true;
+                                playVictorySound();
+                                confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+                                document.getElementById('modal-victory').classList.remove('hidden');
+                            }
+                        }
                     }
-                    if (dirX !== 0) {
-                        player3D.position.x += dirX * WALK_SPEED * dt;
-                        player3D.userData.walking = true;
-                    }
-                    if (!standingOn || standingOn.userData.gone ||
-                        !isOverPlatform(standingOn, player3D.position.x, player3D.position.z)) {
-                        // 발판 가장자리를 벗어나면 떨어짐
-                        onGround = false;
-                        standingOn = null;
-                        playerVelocity = { x: 0, y: 0, z: 0 };
-                    } else {
-                        player3D.position.y = platformTop(standingOn);
-                    }
+                    break;
                 }
             }
 
-            if (!onGround) {
-                const prevY = player3D.position.y;
-                playerVelocity.y += GRAVITY * dt;
-                player3D.position.x += playerVelocity.x * dt;
-                player3D.position.z += playerVelocity.z * dt;
-                player3D.position.y += playerVelocity.y * dt;
-                if (playerVelocity.y <= 0) tryLand(prevY);
+            if (!landed) {
+                onGround = false;
+                standingOn = null;
             }
 
-            const floorY = floorSteps * STEP_HEIGHT;
-            if (!isGameOver && player3D.position.y < floorY - FALL_MARGIN) {
+            // Smooth Camera Follow
+            const targetCamPos = new THREE.Vector3(
+                player3D.position.x,
+                player3D.position.y + 6.5,
+                player3D.position.z + 10.5
+            );
+            camera.position.lerp(targetCamPos, 0.12);
+            camera.lookAt(player3D.position.x, player3D.position.y + 0.8, player3D.position.z - 2.0);
+
+            // Fall Defeat Condition
+            const currentFloorY = floorSteps * STEP_HEIGHT;
+            if (player3D.position.y < currentFloorY - 10.0) {
                 isGameOver = true;
                 document.getElementById('modal-fall').classList.remove('hidden');
             }
         }
 
-        // 떨어지면서 발판 윗면을 지나면 착지
-        function tryLand(prevY) {
-            for (const p of platformObjects) {
-                const ud = p.userData;
-                if (ud.gone) continue;
-                if (!isOverPlatform(p, player3D.position.x, player3D.position.z)) continue;
-                const top = platformTop(p);
-                if (prevY >= top - 0.05 && player3D.position.y <= top + 0.05) {
-                    player3D.position.y = top;
-                    playerVelocity = { x: 0, y: 0, z: 0 };
-                    onGround = true;
-                    standingOn = p;
-                    lastStandX = p.position.x;
-                    onPlatformLanded(p);
-                    return;
-                }
+        function animateLoop() {
+            requestAnimationFrame(animateLoop);
+            const dt = Math.min(clock.getDelta(), 0.1);
+
+            if (scene && camera) {
+                update3DPhysics(dt);
+                updatePlatformAnimations(dt);
+                renderer.render(scene, camera);
             }
         }
 
-        function onPlatformLanded(p) {
-            const ud = p.userData;
-            ud.squash = 0.6;
-            ud.squashV = 0;
-            playStepSound(ud.type);
-
-            if (ud.type === 'wakp') ud.crackHitTime = clock.getElapsedTime();
-            if (ud.isDisappearing) ud.stepped = true;
-
-            if (ud.id > floorSteps) {
-                const prev = floorSteps;
-                floorSteps = ud.id;
-                document.getElementById('platform-step-count').innerText = floorSteps;
-
-                if (floorSteps >= 100 && !victoryTriggered && !isEndlessMode) {
-                    victoryTriggered = true;
-                    isGameOver = true;
-                    playVictorySound();
-                    document.getElementById('modal-victory').classList.remove('hidden');
-                } else if (!isEndlessMode && solvedQuizTotal < 15 &&
-                           Math.floor(floorSteps / 5) > Math.floor(prev / 5)) {
-                    // 5의 배수 층을 넘어서면 관문 퀴즈
-                    triggerGateQuiz();
-                }
+        function onWindowResize() {
+            if (camera && renderer) {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
             }
         }
 
-        function updateCamera() {
-            const px = player3D.position.x;
-            const py = player3D.position.y;
-            const pz = player3D.position.z;
-            camera.position.lerp(new THREE.Vector3(px, py + 6.0, pz + 10.0), 0.12);
-            camera.lookAt(px, py + 1.0, pz - 2.0);
+        // ==========================================
+        // 4. 관문 퀴즈 제어 (Gate Quiz Logic)
+        // ==========================================
+        let currentQuizData = null;
+        let currentRawQuiz = null;
+        let quizTimeLeft = 15;
+        let quizOpen = false;
+
+        // 보기 순서를 섞고 정답 위치를 다시 계산 (정답이 항상 1번에 오지 않도록)
+        function makeShuffledQuiz(raw) {
+            const correctText = raw.options[raw.answer];
+            const opts = raw.options.slice();
+            for (let i = opts.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [opts[i], opts[j]] = [opts[j], opts[i]];
+            }
+            return { q: raw.q, options: opts, answer: opts.indexOf(correctText) };
         }
 
-        // 정답 비교: 공백·문장부호·대소문자 무시, 정답 목록 중 하나와 완전히 같아야 정답
-        function normalizeAnswer(s) {
-            return String(s).toLowerCase().replace(/[\s.,·\-_!?'"()]/g, '');
-        }
+        function renderGateQuiz() {
+            document.getElementById('quiz-question-num').innerText = `관문 퀴즈 (${floorSteps}층)`;
+            document.getElementById('quiz-question').innerText = currentQuizData.q;
+            document.getElementById('quiz-feedback').innerText = '';
+            document.getElementById('quiz-feedback').className = "text-center font-bold text-sm min-h-[1.5rem]";
 
-        function isSubjectiveCorrect(input, answer) {
-            const user = normalizeAnswer(input);
-            if (!user) return false;
-            const list = Array.isArray(answer) ? answer : [answer];
-            return list.some(a => normalizeAnswer(a) === user);
-        }
+            const optionsContainer = document.getElementById('quiz-options-container');
+            optionsContainer.innerHTML = '';
 
-        function showFeedback(msg, kind) {
-            const fb = document.getElementById('quiz-feedback');
-            const style = kind === 'ok'
-                ? 'bg-green-100 text-green-700 border-green-300'
-                : 'bg-red-100 text-red-600 border-red-300';
-            fb.className = 'p-2.5 rounded-2xl text-center text-xs font-extrabold mt-2 border ' + style;
-            fb.textContent = msg;
-        }
-
-        function triggerGateQuiz() {
-            if (solvedQuizTotal >= 15) return;
-
-            isGateActive = true;
-            isOptionLocked = false;
-            keyState = {};
-
-            const quiz = quizDB[currentSubject][solvedQuizTotal];
-            document.getElementById('quiz-total-index').innerText = solvedQuizTotal + 1;
-            document.getElementById('quiz-question').innerText = quiz.q;
-
-            const box = document.getElementById('quiz-options');
-            box.innerHTML = '';
-            document.getElementById('quiz-feedback').classList.add('hidden');
-
-            if (quiz.type === 'subjective') {
-                const wrap = document.createElement('div');
-                wrap.className = 'flex flex-col gap-2 my-2';
-
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.id = 'quiz-subjective-input';
-                input.placeholder = '정답을 입력하세요';
-                input.autocomplete = 'off';
-                input.className = 'w-full px-4 py-3 border-2 border-pinkMain1 rounded-2xl focus:outline-none focus:border-pinkMain2 text-center font-bold text-gray-800 text-sm shadow-inner';
-                input.addEventListener('keydown', e => {
-                    e.stopPropagation();
-                    if (e.key === 'Enter') submitSubjectiveAnswer();
-                });
-
+            currentQuizData.options.forEach((optText, idx) => {
                 const btn = document.createElement('button');
-                btn.id = 'btn-submit-answer';
-                btn.className = 'w-full py-3 bg-pinkMain2 hover:bg-pinkDark text-white font-black text-sm rounded-2xl shadow-md transition transform active:scale-95';
-                btn.innerText = '정답 제출';
-                btn.onclick = submitSubjectiveAnswer;
-
-                wrap.append(input, btn);
-                box.appendChild(wrap);
-                setTimeout(() => input.focus(), 100);
-            } else {
-                quiz.options.forEach((opt, idx) => {
-                    const b = document.createElement('button');
-                    b.className = 'w-full py-3 px-4 bg-white hover:bg-pinkLight1 border-2 border-pinkMain1/60 rounded-2xl font-bold text-xs sm:text-sm text-gray-700 hover:text-pinkDark text-left transition transform active:scale-95 shadow-sm flex items-center justify-between';
-                    const span = document.createElement('span');
-                    span.textContent = opt;
-                    const icon = document.createElement('i');
-                    icon.className = 'fa-solid fa-chevron-right text-pinkMain1 text-xs';
-                    b.append(span, icon);
-                    b.onclick = () => checkQuizAnswer(idx);
-                    box.appendChild(b);
-                });
-            }
-
-            document.getElementById('quiz-post-overlay').classList.remove('hidden');
-            startQuizTimer();
+                btn.className = "option-btn w-full py-3 px-4 bg-white hover:bg-pink-50 text-gray-800 font-bold text-base rounded-xl border-2 border-pink-200 text-left flex items-center justify-between";
+                btn.innerHTML = `<span>${idx + 1}. ${optText}</span><span class="text-xs text-pink-400 font-normal">선택</span>`;
+                btn.onclick = () => checkQuizAnswer(idx, btn);
+                optionsContainer.appendChild(btn);
+            });
         }
 
         function startQuizTimer() {
-            clearQuizTimer();
             quizTimeLeft = 15;
-            updateTimerBar();
-            quizTimerId = setInterval(() => {
-                quizTimeLeft = Math.max(0, quizTimeLeft - 0.1);
-                updateTimerBar();
-                if (quizTimeLeft <= 0) handleQuizTimeout();
-            }, 100);
-        }
-
-        function clearQuizTimer() {
-            if (quizTimerId) {
-                clearInterval(quizTimerId);
-                quizTimerId = null;
-            }
-        }
-
-        function updateTimerBar() {
-            const bar = document.getElementById('quiz-timer-bar');
-            if (bar) bar.style.width = (quizTimeLeft / 15 * 100) + '%';
-        }
-
-        function handleQuizTimeout() {
-            if (isOptionLocked) return;
-            clearQuizTimer();
-            showFeedback('⏰ 제한시간이 끝났습니다! 같은 문제를 다시 풀어보세요.', 'bad');
-            setTimeout(() => {
-                if (isGateActive && !isOptionLocked) startQuizTimer();
-            }, 1200);
-        }
-
-        function checkQuizAnswer(selectedIdx) {
-            if (isOptionLocked) return;
-            const quiz = quizDB[currentSubject][solvedQuizTotal];
-            if (selectedIdx === quiz.answer) {
-                handleCorrect();
-            } else {
-                showFeedback('❌ 오답입니다. 정답을 다시 선택해 보세요!', 'bad');
-            }
-        }
-
-        function submitSubjectiveAnswer() {
-            if (isOptionLocked) return;
-            const input = document.getElementById('quiz-subjective-input');
-            if (!input) return;
-            const quiz = quizDB[currentSubject][solvedQuizTotal];
-            if (isSubjectiveCorrect(input.value, quiz.answer)) {
-                handleCorrect();
-            } else {
-                showFeedback('❌ 오답입니다. 정답을 다시 입력해 보세요!', 'bad');
-            }
-        }
-
-        function handleCorrect() {
-            isOptionLocked = true;
-            clearQuizTimer();
-            showFeedback('⭕ 정답입니다! 다음 구간으로 전진합니다.', 'ok');
-            setTimeout(() => {
-                solvedQuizTotal++;
-                document.getElementById('quiz-solved-count').innerText = solvedQuizTotal;
-                document.getElementById('quiz-post-overlay').classList.add('hidden');
-                isGateActive = false;
-                isOptionLocked = false;
-                if (solvedQuizTotal >= 15) showResultScreen();
+            document.getElementById('quiz-timer').innerText = `남은 시간: ${quizTimeLeft}초`;
+            clearInterval(activeQuizTimer);
+            activeQuizTimer = setInterval(() => {
+                quizTimeLeft--;
+                document.getElementById('quiz-timer').innerText = `남은 시간: ${quizTimeLeft}초`;
+                if (quizTimeLeft <= 0) {
+                    clearInterval(activeQuizTimer);
+                    // 시간 초과: 같은 문제를 다시 섞어서 15초부터 재시작
+                    currentQuizData = makeShuffledQuiz(currentRawQuiz);
+                    renderGateQuiz();
+                    document.getElementById('quiz-feedback').innerText = "⏱️ 시간 초과! 다시 15초를 드릴게요.";
+                    document.getElementById('quiz-feedback').className = "text-center font-bold text-sm min-h-[1.5rem] text-red-500";
+                    startQuizTimer();
+                }
             }, 1000);
         }
 
-        function showResultScreen() {
-            document.getElementById('result-cat-text').innerText = getResultLabel();
-            showScreen('screen-result');
+        function triggerGateQuiz() {
+            const subjectQuestions = quizDB[currentSubject];
+            const quizIndex = solvedQuizTotal % subjectQuestions.length;
+            currentRawQuiz = subjectQuestions[quizIndex];
+            currentQuizData = makeShuffledQuiz(currentRawQuiz);
+            quizOpen = true;
+            renderGateQuiz();
+            startQuizTimer();
+            document.getElementById('modal-quiz').classList.remove('hidden');
         }
 
-        window.addEventListener('resize', () => {
-            if (!renderer || !camera) return;
-            const c = document.getElementById('game3dContainer');
-            const w = c.clientWidth, h = c.clientHeight;
-            if (!w || !h) return;
-            camera.aspect = w / h;
-            camera.updateProjectionMatrix();
-            renderer.setSize(w, h);
-        });
+        function checkQuizAnswer(selectedIdx, clickedBtn) {
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            if (selectedIdx === currentQuizData.answer) {
+                // Correct Answer!
+                clearInterval(activeQuizTimer);
+                buttons.forEach(b => b.disabled = true);
+                clickedBtn.classList.remove('bg-white');
+                clickedBtn.classList.add('bg-green-100', 'border-green-400', 'text-green-800');
+                
+                document.getElementById('quiz-feedback').innerText = "⭕ 정답입니다! 계속 올라가세요!";
+                document.getElementById('quiz-feedback').className = "text-center font-bold text-sm min-h-[1.5rem] text-green-600";
 
-        window.addEventListener('keydown', e => {
-            const active = document.activeElement;
-            if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
-            keyState[e.code] = true;
-            if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'PageUp', 'Home', 'End'].includes(e.code)) {
-                e.preventDefault();
+                solvedQuizTotal++;
+                setTimeout(() => {
+                    document.getElementById('modal-quiz').classList.add('hidden');
+                    quizOpen = false;
+                }, 1200);
+
+            } else {
+                // Incorrect Answer - Disable clicked button only
+                clickedBtn.disabled = true;
+                clickedBtn.classList.remove('bg-white');
+                clickedBtn.classList.add('bg-red-100', 'border-red-300', 'text-red-600', 'opacity-60');
+                
+                document.getElementById('quiz-feedback').innerText = "❌ 오답입니다! 다른 답을 선택해보세요.";
+                document.getElementById('quiz-feedback').className = "text-center font-bold text-sm min-h-[1.5rem] text-red-500";
             }
+        }
+
+        // ==========================================
+        // 5. 화면 전환 및 흐름 제어 (Screen Routing)
+        // ==========================================
+        function showScreen(screenId) {
+            ['screen-home', 'screen-select-subject', 'screen-howto', 'modal-quiz', 'modal-fall', 'modal-victory'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+
+            quizOpen = false;
+            document.getElementById('hud').classList.add('hidden');
+            document.getElementById('touch-controls').classList.add('hidden');
+
+            const target = document.getElementById(screenId);
+            if (target) target.classList.remove('hidden');
+        }
+
+        function resetGameState() {
+            floorSteps = 0;
+            solvedQuizTotal = 0;
+            isGameOver = false;
+            victoryTriggered = false;
+            playerVelocity = { x: 0, y: 0, z: 0 };
+            onGround = true;
+
+            document.getElementById('platform-step-count').innerText = "0";
+
+            // 플레이어 3D 위치 및 카메라 초기화
+            if (player3D) {
+                player3D.position.set(0, 1.2, 0);
+            }
+            if (camera) {
+                camera.position.set(0, 7.7, 10.5);
+                camera.lookAt(0, 0.8, -2.0);
+            }
+
+            // 발판 상태 복구 (사라졌던 발판 재등장 등)
+            platformObjects.forEach(p => {
+                if (p.userData.baseY !== undefined) {
+                    p.position.set(p.userData.baseX, p.userData.baseY, p.userData.baseZ);
+                }
+                p.userData.stepped = false;
+                p.userData.shattered = false;
+                p.userData.vanishTimer = 1.5;
+            });
+
+            // 파편 액터 정리
+            breakParticles.forEach(group => scene.remove(group));
+            breakParticles = [];
+        }
+
+        function startGame(subject) {
+            currentSubject = subject;
+
+            showScreen('');
+            document.getElementById('hud').classList.remove('hidden');
+            document.getElementById('touch-controls').classList.remove('hidden');
+
+            if (!scene) {
+                initThreeJS();
+            }
+            resetGameState();
+        }
+
+        function restartGame() {
+            // 처음부터 다시 도전 기능 (1층 위치 및 상태 완벽 초기화)
+            clearInterval(activeQuizTimer);
+            document.getElementById('modal-fall').classList.add('hidden');
+            startGame(currentSubject);
+        }
+
+        function goHome() {
+            clearInterval(activeQuizTimer);
+            showScreen('screen-home');
+        }
+
+        // ==========================================
+        // 6. 이벤트 리스너 설정 (Keyboard & Touch)
+        // ==========================================
+        window.addEventListener('keydown', (e) => {
+            keyState[e.code] = true;
         });
 
-        window.addEventListener('keyup', e => {
+        window.addEventListener('blur', () => { for (const k in keyState) keyState[k] = false; });
+
+        window.addEventListener('keyup', (e) => {
             keyState[e.code] = false;
         });
 
-        // 창을 벗어나면 눌린 키 상태를 초기화 (캐릭터가 혼자 움직이는 현상 방지)
-        window.addEventListener('blur', () => {
-            keyState = {};
-        });
+        // Touch Control Binding
+        function setupTouchButton(id, code) {
+            const btn = document.getElementById(id);
+            if (!btn) return;
 
+            btn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                keyState[code] = true;
+            });
+            btn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                keyState[code] = false;
+            });
+        }
+
+        setupTouchButton('btn-up', 'KeyW');
+        setupTouchButton('btn-down', 'KeyS');
+        setupTouchButton('btn-left', 'KeyA');
+        setupTouchButton('btn-right', 'KeyD');
+        setupTouchButton('btn-jump', 'Space');
+
+        // Start 3D Loop on Window Load
+        window.onload = function() {
+            animateLoop();
+        };
     </script>
 

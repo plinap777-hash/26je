@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>스트레스 타파 3차 하드모드</title>
+    <title>스트레스 타파 4차 하드모드</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -134,7 +134,7 @@
                     <h2 class="text-xl sm:text-2xl font-extrabold text-pinkDark mb-3">🔥 하드모드 특징</h2>
                     
                     <div class="bg-white/90 p-3.5 rounded-2xl border border-pinkMain1/50 text-gray-800 text-xs sm:text-sm leading-relaxed mb-3 font-semibold shadow-inner text-left space-y-2">
-                        <p>⚠️ <strong>좌우로 움직이는 움직이는 발판!</strong> 높은 구역일수록 발판이 좌우로 이동하여 정교한 점프 타이밍이 필요합니다.</p>
+                        <p>⚠️ <strong>좌우로 움직이는 발판!</strong> 높은 구역일수록 발판이 좌우로 이동하여 정교한 점프 타이밍이 필요합니다.</p>
                         <p>⚠️ <strong>사라지는 1회용 발판!</strong> 깜빡이는 발판은 밟은 뒤 1.5초 만에 사라집니다!</p>
                         <p>⚠️ <strong>퀴즈 제한시간 15초!</strong> 퀴즈 출제 시 제한시간 안에 정답을 맞춰야 승리합니다.</p>
                         <p>💡 5발판마다 관문 퀴즈가 등장하며 100층 정상 도달 시 정복 완료!</p>
@@ -142,10 +142,7 @@
 
                     <div class="bg-pinkLight1/80 p-3 rounded-2xl border border-pinkMain1 text-pinkDark text-xs leading-relaxed mb-3 font-bold shadow-inner text-left">
                         🎮 <strong>조작 방법:</strong><br>
-                        • <strong>PgUp / ↑ / W</strong>: 전진 이동<br>
-                        • <strong>Home / ← / A</strong>: 왼쪽 이동<br>
-                        • <strong>End / → / D</strong>: 오른쪽 이동<br>
-                        • <strong>Space (스페이스바)</strong>: 점프
+                        • <strong>Space / ↑ / W / PgUp</strong>: 앞으로 점프 (다음 발판에 착지)<br>• <strong>← / A + 점프</strong>: 왼쪽 대각선 점프<br>• <strong>→ / D + 점프</strong>: 오른쪽 대각선 점프<br>• <strong>← / →</strong>: 발판 위에서 좌우 이동
                     </div>
                 </div>
 
@@ -201,11 +198,11 @@
                 <div class="flex items-center gap-3">
                     <span id="game-cat-badge" class="px-3 py-1 bg-pinkMain2 text-white text-xs font-black rounded-full shadow-sm">역사</span>
                     <span class="text-xs sm:text-sm font-extrabold text-pinkDark flex items-center gap-1">
-                        🚩 발판: <span id="platform-step-count" class="text-pinkMain2 font-black text-base">12</span> / 100
+                        🚩 발판: <span id="platform-step-count" class="text-pinkMain2 font-black text-base">0</span> / 100
                     </span>
                 </div>
                 <div class="flex items-center gap-3">
-                    <span class="text-xs sm:text-sm font-bold text-gray-700">⭐ 정답: <span id="quiz-solved-count" class="text-pinkMain2 font-extrabold">2</span> / 15</span>
+                    <span class="text-xs sm:text-sm font-bold text-gray-700">⭐ 정답: <span id="quiz-solved-count" class="text-pinkMain2 font-extrabold">0</span> / 15</span>
                     <button onclick="goHome()" class="px-3 py-1 bg-white hover:bg-pinkLight1 border border-pinkMain1 text-pinkDark text-xs font-bold rounded-full transition shadow-sm flex items-center gap-1">
                         <i class="fa-solid fa-house"></i> 메인
                     </button>
@@ -213,7 +210,7 @@
             </div>
 
             <!-- 3D Three.js 화면 캔버스 -->
-            <div id="game3dContainer"><canvas width="1528" height="732" style="display: block; width: 1528px; height: 732px;"></canvas></div>
+            <div id="game3dContainer"></div>
 
             <!-- 퀴즈 팝업 포스트잇 카드 -->
             <div id="quiz-post-overlay" class="absolute z-30 inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 hidden">
@@ -225,7 +222,7 @@
                             </span>
                             <div class="flex items-center gap-2">
                                 <span class="text-xs font-bold text-gray-500">
-                                    진행 문제: <span id="quiz-total-index">2</span>/15
+                                    진행 문제: <span id="quiz-total-index">1</span>/15
                                 </span>
                                 <button onclick="goHome()" class="px-2.5 py-1 bg-white hover:bg-pinkLight1 border border-pinkMain1 text-pinkDark text-xs font-bold rounded-full transition shadow-sm flex items-center gap-1">
                                     <i class="fa-solid fa-house"></i> 홈
@@ -235,14 +232,14 @@
 
                         <!-- 타임 게이지 바 -->
                         <div class="w-full bg-gray-200 h-2.5 rounded-full overflow-hidden mb-3 border border-pinkMain1/30">
-                            <div id="quiz-timer-bar" class="bg-gradient-to-r from-pinkMain1 to-red-500 h-full w-full" style="width: 78.6667%;"></div>
+                            <div id="quiz-timer-bar" class="bg-gradient-to-r from-pinkMain1 to-red-500 h-full w-full" style="width: 100%;"></div>
                         </div>
 
-                        <h3 id="quiz-question" class="text-sm sm:text-base font-bold text-gray-800 leading-snug my-2 min-h-[48px]">2. [역사] 임진왜란 당시 한산도 대첩을 승리로 이끈 장군은?</h3>
+                        <h3 id="quiz-question" class="text-sm sm:text-base font-bold text-gray-800 leading-snug my-2 min-h-[48px]">퀴즈 문제 불러오는 중...</h3>
                     </div>
 
-                    <div id="quiz-options" class="space-y-2 my-2"><button class="w-full py-3 px-4 bg-white hover:bg-pinkLight1 border-2 border-pinkMain1/60 rounded-2xl font-bold text-xs sm:text-sm text-gray-700 hover:text-pinkDark text-left transition transform active:scale-98 shadow-sm flex items-center justify-between"><span>강감찬</span> <i class="fa-solid fa-chevron-right text-pinkMain1 text-xs"></i></button><button class="w-full py-3 px-4 bg-white hover:bg-pinkLight1 border-2 border-pinkMain1/60 rounded-2xl font-bold text-xs sm:text-sm text-gray-700 hover:text-pinkDark text-left transition transform active:scale-98 shadow-sm flex items-center justify-between"><span>이순신</span> <i class="fa-solid fa-chevron-right text-pinkMain1 text-xs"></i></button><button class="w-full py-3 px-4 bg-white hover:bg-pinkLight1 border-2 border-pinkMain1/60 rounded-2xl font-bold text-xs sm:text-sm text-gray-700 hover:text-pinkDark text-left transition transform active:scale-98 shadow-sm flex items-center justify-between"><span>김유신</span> <i class="fa-solid fa-chevron-right text-pinkMain1 text-xs"></i></button><button class="w-full py-3 px-4 bg-white hover:bg-pinkLight1 border-2 border-pinkMain1/60 rounded-2xl font-bold text-xs sm:text-sm text-gray-700 hover:text-pinkDark text-left transition transform active:scale-98 shadow-sm flex items-center justify-between"><span>을지문덕</span> <i class="fa-solid fa-chevron-right text-pinkMain1 text-xs"></i></button></div>
-                    <div id="quiz-feedback" class="p-2.5 rounded-2xl text-center text-xs font-extrabold mt-2 bg-green-100 text-green-700 border border-green-300">⭕ 정답입니다! 다음 구간으로 전진합니다.</div>
+                    <div id="quiz-options" class="space-y-2 my-2"></div>
+                    <div id="quiz-feedback" class="hidden p-2.5 rounded-2xl text-center text-xs font-extrabold mt-2"></div>
                 </div>
             </div>
 
@@ -329,35 +326,6 @@
     </footer>
 
     <script>
-        // 화면 전환 함수
-        function showScreen(screenId) {
-            clearQuizTimer();
-            const screens = ['screen-main', 'screen-explain', 'screen-select', 'screen-game', 'screen-result'];
-            screens.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.classList.add('hidden');
-            });
-
-            const target = document.getElementById(screenId);
-            if (target) target.classList.remove('hidden');
-
-            const fallModal = document.getElementById('modal-fall');
-            if (fallModal) fallModal.classList.add('hidden');
-
-            const victoryModal = document.getElementById('modal-victory');
-            if (victoryModal) victoryModal.classList.add('hidden');
-        }
-
-        function goHome() {
-            clearQuizTimer();
-            showScreen('screen-main');
-            if (animationFrameId) {
-                cancelAnimationFrame(animationFrameId);
-                animationFrameId = null;
-            }
-        }
-
-        // 과목별 심화 15문제 퀴즈 데이터베이스
         const quizDB = {
             history: [
                 { q: "1. [역사] 훈민정음을 창제한 조선의 제4대 국왕은?", options: ["태종", "세종대왕", "성종", "정조"], answer: 1 },
@@ -374,7 +342,7 @@
                 { q: "12. [역사] 귀주대첩에서 거란군을 물리친 고려의 명장은?", options: ["서희", "강감찬", "윤관", "최영"], answer: 1 },
                 { q: "13. [역사] 조선의 으뜸이 되는 제1의 법궁은?", options: ["창덕궁", "경복궁", "창경궁", "덕수궁"], answer: 1 },
                 { q: "14. [역사] 조선시대 왕들의 국정 기록을 담은 세계기록유산은?", options: ["조선왕조실록", "삼국사기", "고려사", "동국통감"], answer: 0 },
-                { q: "15. [역사] 우리 역사상 최초의 고대 국가 이름은?", type: "subjective", answer: ["고조선", "조선"] }
+                { q: "15. [역사] 우리 역사상 최초의 고대 국가 이름은?", type: "subjective", answer: "고조선" }
             ],
             english: [
                 { q: "1. [영어] '지식을 전달하다 / 주다'에 해당하는 영어 단어는?", options: ["buy", "receive", "give"], answer: 2 },
@@ -385,13 +353,13 @@
                 { q: "6. [영어] 9월을 뜻하는 영어 단어는?", options: ["september", "September", "Saptamber"], answer: 1 },
                 { q: "7. [영어] '부모님'을 의미하는 영어 단어는?", options: ["grandparents", "child", "parents"], answer: 2 },
                 { q: "8. [영어] 'safe'의 올바른 한국어 발음 표기는?", options: ["세이프", "세페", "세프"], answer: 0 },
-                { q: "9. [영어] 문장의 첫 시작 알파벳은 대문자로 써야 한다.", options: ["O (참)", "X (거짓)"], answer: 0 },
-                { q: "10. [영어] 'Play'에는 악기를 연주하다라는 뜻도 포함된다.", options: ["O (참)", "X (거짓)"], answer: 0 },
-                { q: "11. [영어] 'Fish'는 복수형일 때 반드시 -s를 붙여야 한다.", options: ["O (참)", "X (거짓)"], answer: 1 },
+                { q: "9. [영어] 문장의 첫 시작 알파벳은 대문자로 써야 한다.", options: ["O", "X"], answer: 0 },
+                { q: "10. [영어] 'Play'에는 악기를 연주하다라는 뜻도 포함된다.", options: ["O", "X"], answer: 0 },
+                { q: "11. [영어] 'Fish'는 복수형일 때 반드시 -s를 붙여야 한다.", options: ["O", "X"], answer: 1 },
                 { q: "12. [영어] 'Beautiful'의 반대말에 가까운 단어는?", options: ["Ugly", "Pretty", "Nice"], answer: 0 },
                 { q: "13. [영어] 'Library'의 한국어 뜻은?", options: ["도서관", "박물관", "미술관"], answer: 0 },
                 { q: "14. [영어] '어제'를 뜻하는 영어 단어는?", options: ["Tomorrow", "Today", "Yesterday"], answer: 2 },
-                { q: "15. [영어] 'Apple' 단어 앞에는 'a' 대신 'an'을 붙인다.", options: ["O (참)", "X (거짓)"], answer: 0 }
+                { q: "15. [영어] 'Apple' 단어 앞에는 'a' 대신 'an'을 붙인다.", options: ["O", "X"], answer: 0 }
             ],
             ai: [
                 { q: "1. [AI] 웹 페이지의 구조와 뼈대를 정의하는 언어는?", type: "subjective", answer: ["HTML", "html"] },
@@ -400,19 +368,20 @@
                 { q: "4. [AI] 생성형 AI에게 전달하는 명령어나 질문을 무엇이라 하나요?", options: ["프롬프트", "알고리즘", "데이터셋", "스크립트"], answer: 0 },
                 { q: "5. [AI] 인공지능 학술 용어가 최초로 공식 등장한 연도는?", type: "subjective", answer: ["1956년", "1956"] },
                 { q: "6. [AI] AI가 데이터를 학습해 스스로 패턴을 익히는 기술은?", options: ["머신러닝", "하드웨어", "네트워크", "데이터베이스"], answer: 0 },
-                { q: "7. [AI] 인공지능은 감정이나 마음을 진심으로 느낄 수 있다.", options: ["O (거짓)", "X (참)"], answer: 1 },
-                { q: "8. [AI] 인공지능은 스스로 데이터를 학습하여 발전할 수 있다.", options: ["O (참)", "X (거짓)"], answer: 0 },
-                { q: "9. [AI] AI 생성 결과물은 항상 100% 오류 없는 진실만을 출력한다.", options: ["O (거짓)", "X (참)"], answer: 1 },
+                { q: "7. [AI] 인공지능은 감정이나 마음을 진심으로 느낄 수 있다.", options: ["O", "X"], answer: 1 },
+                { q: "8. [AI] 인공지능은 스스로 데이터를 학습하여 발전할 수 있다.", options: ["O", "X"], answer: 0 },
+                { q: "9. [AI] AI 생성 결과물은 항상 100% 오류 없는 진실만을 출력한다.", options: ["O", "X"], answer: 1 },
                 { q: "10. [AI] 타인의 얼굴/음성을 합성하여 정교한 가짜 영상/음성을 만드는 기술은?", options: ["딥페이크", "클라우드", "파이썬", "블록체인"], answer: 0 },
-                { q: "11. [AI] 자율주행 자동차는 AI 기술에 기반한다.", options: ["O (참)", "X (거짓)"], answer: 0 },
-                { q: "12. [AI] 학습 데이터의 편향성으로 발생하는 결과의 불공정성을 '데이터 편향성'이라 부른다.", options: ["O (참)", "X (거짓)"], answer: 0 },
+                { q: "11. [AI] 자율주행 자동차는 AI 기술에 기반한다.", options: ["O", "X"], answer: 0 },
+                { q: "12. [AI] 학습 데이터의 편향성으로 발생하는 결과의 불공정성을 '데이터 편향성'이라 부른다.", options: ["O", "X"], answer: 0 },
                 { q: "13. [AI] 인공지능 신경망 구조 중 인간 뇌를 모방한 모델은?", options: ["인공신경망", "데이터망", "광통신망", "서버망"], answer: 0 },
                 { q: "14. [AI] ChatGPT와 같은 대형 언어 모델을 뜻하는 약어는?", options: ["LLM", "CPU", "RAM", "GPU"], answer: 0 },
-                { q: "15. [AI] AI는 일상생활과 학습 도구로 누구나 활용할 수 있다.", options: ["O (참)", "X (거짓)"], answer: 0 }
+                { q: "15. [AI] AI는 일상생활과 학습 도구로 누구나 활용할 수 있다.", options: ["O", "X"], answer: 0 }
             ]
         };
 
-        // 글로벌 변수
+        
+
         let currentSubject = 'history';
         let floorSteps = 0;
         let solvedQuizTotal = 0;
@@ -421,24 +390,33 @@
         let isEndlessMode = false;
         let victoryTriggered = false;
         let isGameOver = false;
+        let gameRunning = false;
 
-        // 퀴즈 타이머 변수
         let quizTimerId = null;
         let quizTimeLeft = 15;
 
-        // Three.js 변수
-        let scene, camera, renderer;
-        let player3D;
+        let scene = null, camera = null, renderer = null;
+        let player3D = null;
+        let legL = null, legR = null, armL = null, armR = null;
         let platformObjects = [];
         let animationFrameId = null;
-        let clock = new THREE.Clock();
+        const clock = new THREE.Clock();
 
         let playerVelocity = { x: 0, y: 0, z: 0 };
         let onGround = false;
+        let standingOn = null;
+        let lastStandX = 0;
         let keyState = {};
 
         const STEP_HEIGHT = 1.8;
         const STEP_DEPTH = 3.0;
+        const GRAVITY = -30.0;
+        const JUMP_VY = 12.5;   // 점프 초기 속도 (1칸 위까지 닿는 높이)
+        const HOP_VZ = 4.6;     // 앞으로 도약하는 속도 (다음 발판까지 거리 3칸)
+        const HOP_VX = 2.8;     // 좌우 대각선 도약 속도 (발판 한 칸 옆으로 이동)
+        const WALK_SPEED = 3.2; // 발판 위 좌우 걷기 속도
+        const FALL_MARGIN = 7.0;
+        const REACH = { wakp: 0.95, slang: 1.3, keycap: 0.95 };
 
         // 오디오 시스템 (Web Audio API)
         let audioCtx = null;
@@ -553,39 +531,84 @@
             }
         }
 
+        
+
         // 게임 시작
+        function getResultLabel() {
+            return currentSubject === 'history' ? '역사' : (currentSubject === 'english' ? '영어' : 'AI');
+        }
+
+        function showScreen(screenId) {
+            clearQuizTimer();
+            ['screen-main', 'screen-explain', 'screen-select', 'screen-game', 'screen-result'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+            document.getElementById('modal-fall').classList.add('hidden');
+            document.getElementById('modal-victory').classList.add('hidden');
+            const target = document.getElementById(screenId);
+            if (target) target.classList.remove('hidden');
+            gameRunning = screenId === 'screen-game';
+        }
+
+        function goHome() {
+            showScreen('screen-main');
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+        }
+
         function startGame(subject) {
             currentSubject = subject;
             floorSteps = 0;
             solvedQuizTotal = 0;
+            isGateActive = false;
+            isGameOver = false;
             isEndlessMode = false;
             victoryTriggered = false;
-            isGameOver = false;
+            isOptionLocked = false;
+            keyState = {};
 
-            const badge = document.getElementById('game-cat-badge');
-            if (badge) {
-                badge.innerText = subject === 'history' ? '역사' : (subject === 'english' ? '영어' : 'AI');
-            }
+            document.getElementById('game-cat-badge').innerText = getResultLabel();
             document.getElementById('platform-step-count').innerText = '0';
             document.getElementById('quiz-solved-count').innerText = '0';
+            document.getElementById('quiz-post-overlay').classList.add('hidden');
 
             showScreen('screen-game');
             init3DGame();
         }
 
-        function restartGame() {
-            document.getElementById('modal-fall').classList.add('hidden');
-            isGameOver = false;
-
-            const targetP = platformObjects.find(p => p.userData.id === floorSteps) || platformObjects[0];
-            player3D.position.set(targetP.position.x, targetP.position.y + 1.8, targetP.position.z);
-            playerVelocity = { x: 0, y: 0, z: 0 };
-            onGround = true;
-        }
-
         function continueEndlessMode() {
             isEndlessMode = true;
+            isGateActive = false;
+            isGameOver = false;
             showScreen('screen-game');
+        }
+
+        // 떨어진 발판(마지막으로 밟은 발판)에서 다시 시작
+        function restartGame() {
+            const target = platformObjects.find(p => p.userData.id === floorSteps) || platformObjects[0];
+            restorePlatform(target);
+            document.getElementById('modal-fall').classList.add('hidden');
+
+            player3D.position.set(target.position.x, platformTop(target), target.position.z);
+            playerVelocity = { x: 0, y: 0, z: 0 };
+            onGround = true;
+            standingOn = target;
+            lastStandX = target.position.x;
+            keyState = {};
+            isGameOver = false;
+        }
+
+        function restorePlatform(p) {
+            const ud = p.userData;
+            ud.gone = false;
+            ud.stepped = false;
+            ud.vanishTimer = 1.5;
+            ud.squash = 1;
+            ud.squashV = 0;
+            p.visible = true;
         }
 
         // 3D 발판 생성 함수들
@@ -631,6 +654,7 @@
             return group;
         }
 
+        
         function createSlangPlatform() {
             const group = new THREE.Group();
             const mat = new THREE.MeshPhongMaterial({ color: 0xFFF2A1, shininess: 60 });
@@ -641,131 +665,206 @@
             return group;
         }
 
+        
+
+        // 키캡 한 개짜리 발판 (밟으면 눌렸다가 튀어나옴)
         function createKeycapPlatform() {
             const group = new THREE.Group();
-            const baseMat = new THREE.MeshPhongMaterial({ color: 0xE2E8F0 });
-            const baseGeo = new THREE.BoxGeometry(2.2, 0.25, 2.2);
-            const baseMesh = new THREE.Mesh(baseGeo, baseMat);
-            group.add(baseMesh);
+            const geo = new THREE.BoxGeometry(1.5, 0.5, 1.5);
+            geo.translate(0, 0.25, 0); // 밑면이 원점이 되도록 (눌림 연출 기준점)
+            const cap = new THREE.Mesh(geo, new THREE.MeshPhongMaterial({ color: 0xFFB7C5, shininess: 40 }));
+            cap.position.y = -0.25;
+            cap.name = 'keycapMesh';
 
-            const colors = [0x93C5FD, 0xFCA5A5, 0xFDE047, 0xC084FC, 0x86EFAC, 0xF472B6];
-            let idx = 0;
-            for (let r = -1; r <= 1; r++) {
-                for (let c = -1; c <= 1; c++) {
-                    const capGeo = new THREE.BoxGeometry(0.6, 0.35, 0.6);
-                    const capMat = new THREE.MeshPhongMaterial({ color: colors[idx % colors.length] });
-                    const capMesh = new THREE.Mesh(capGeo, capMat);
-                    capMesh.position.set(c * 0.68, 0.2, r * 0.68);
-                    group.add(capMesh);
-                    idx++;
-                }
-            }
+            const top = new THREE.Mesh(
+                new THREE.BoxGeometry(1.1, 0.06, 1.1),
+                new THREE.MeshPhongMaterial({ color: 0xFFE4EC, shininess: 60 })
+            );
+            top.position.y = 0.53;
+            cap.add(top);
+
+            group.add(cap);
             return group;
         }
 
-        // 3D 메인 초기화
+        // 발판 윗면 높이 (발이 닿는 높이)
+        function platformTop(p) {
+            const ud = p.userData;
+            if (ud.type === 'wakp') return p.position.y + 1.0;
+            if (ud.type === 'slang') return p.position.y + 0.25 * ud.squash;
+            return p.position.y - 0.25 + 0.5 * ud.squash;
+        }
+
+        function isOverPlatform(p, x, z) {
+            const r = REACH[p.userData.type];
+            return Math.abs(x - p.position.x) < r && Math.abs(z - p.position.z) < r;
+        }
+
+        // 사람 모양 캐릭터 (파란색, 발 위치가 원점)
+        function createPlayerModel() {
+            const group = new THREE.Group();
+            const shirtMat = new THREE.MeshPhongMaterial({ color: 0x2563eb, shininess: 50 });
+            const pantsMat = new THREE.MeshPhongMaterial({ color: 0x1e3a8a, shininess: 30 });
+            const skinMat = new THREE.MeshPhongMaterial({ color: 0x60a5fa, shininess: 40 });
+            const hairMat = new THREE.MeshPhongMaterial({ color: 0x1e3a8a });
+            const shoeMat = new THREE.MeshPhongMaterial({ color: 0x0f172a });
+
+            const torso = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.6, 0.28), shirtMat);
+            torso.position.set(0, 0.85, 0);
+            group.add(torso);
+
+            const head = new THREE.Mesh(new THREE.SphereGeometry(0.22, 24, 24), skinMat);
+            head.position.set(0, 1.36, 0);
+            group.add(head);
+
+            const hair = new THREE.Mesh(new THREE.SphereGeometry(0.235, 24, 24, 0, Math.PI * 2, 0, Math.PI * 0.5), hairMat);
+            hair.position.set(0, 1.38, 0);
+            group.add(hair);
+
+            function limb(x, pivotY, length, width, mat, isLeg) {
+                const pivot = new THREE.Group();
+                pivot.position.set(x, pivotY, 0);
+                const mesh = new THREE.Mesh(new THREE.BoxGeometry(width, length, isLeg ? 0.22 : 0.18), mat);
+                mesh.position.y = -length / 2;
+                pivot.add(mesh);
+                if (isLeg) {
+                    const shoe = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.1, 0.3), shoeMat);
+                    shoe.position.set(0, -length - 0.05, -0.03);
+                    pivot.add(shoe);
+                }
+                group.add(pivot);
+                return pivot;
+            }
+
+            armL = limb(-0.34, 1.12, 0.55, 0.16, shirtMat, false);
+            armR = limb(0.34, 1.12, 0.55, 0.16, shirtMat, false);
+            legL = limb(-0.13, 0.55, 0.55, 0.2, pantsMat, true);
+            legR = limb(0.13, 0.55, 0.55, 0.2, pantsMat, true);
+
+            return group;
+        }
+
+        function updatePlayerPose(dt) {
+            if (!player3D || !legL) return;
+            const t = clock.getElapsedTime();
+            let legT = 0, armT = 0;
+            if (!onGround) {
+                legT = 0.5;
+                armT = -2.6;
+            } else if (player3D.userData.walking) {
+                legT = Math.sin(t * 12) * 0.6;
+                armT = -Math.sin(t * 12) * 0.5;
+            }
+            const legRT = onGround ? -legT : legT;
+            const armRT = onGround ? -armT : armT;
+            const k = Math.min(1, dt * 12);
+            legL.rotation.x += (legT - legL.rotation.x) * k;
+            legR.rotation.x += (legRT - legR.rotation.x) * k;
+            armL.rotation.x += (armT - armL.rotation.x) * k;
+            armR.rotation.x += (armRT - armR.rotation.x) * k;
+        }
+
         function init3DGame() {
             const container = document.getElementById('game3dContainer');
-            container.innerHTML = '';
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId);
+                animationFrameId = null;
+            }
+
+            const w = container.clientWidth || window.innerWidth;
+            const h = container.clientHeight || window.innerHeight;
 
             scene = new THREE.Scene();
             scene.background = new THREE.Color(0xFFE6EB);
 
-            camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.shadowMap.enabled = true;
-            container.appendChild(renderer.domElement);
+            camera = new THREE.PerspectiveCamera(55, w / h, 0.1, 1000);
+            if (!renderer) {
+                renderer = new THREE.WebGLRenderer({ antialias: true });
+            }
+            renderer.setSize(w, h);
+            if (!container.contains(renderer.domElement)) {
+                container.innerHTML = '';
+                container.appendChild(renderer.domElement);
+            }
 
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-            scene.add(ambientLight);
-
+            scene.add(new THREE.AmbientLight(0xffffff, 0.7));
             const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
             dirLight.position.set(10, 20, 15);
             scene.add(dirLight);
 
-            // 유리 구체 플레이어
-            const playerGeo = new THREE.SphereGeometry(0.65, 32, 32);
-            const playerMat = new THREE.MeshPhysicalMaterial({
-                color: 0xFF6B8B,
-                transmission: 0.6,
-                opacity: 0.9,
-                transparent: true,
-                roughness: 0.1,
-                ior: 1.5,
-                reflectivity: 0.9
-            });
-            player3D = new THREE.Mesh(playerGeo, playerMat);
-            player3D.position.set(0, 2, 0);
+            player3D = createPlayerModel();
             scene.add(player3D);
 
             platformObjects = [];
-            let currentTypeIdx = 0;
             const types = ['wakp', 'slang', 'keycap'];
-
+            let typeIdx = 0;
             let posX = 0;
             let posZ = 0;
 
             for (let i = 0; i <= 105; i++) {
-                if (i > 0 && i % 5 === 0) {
-                    currentTypeIdx = (currentTypeIdx + 1) % types.length;
-                }
-                const type = types[currentTypeIdx];
-                let pObj;
+                if (i > 0 && i % 5 === 0) typeIdx = (typeIdx + 1) % types.length;
+                const type = types[typeIdx];
+                const pObj = type === 'wakp' ? createWakpPlatform()
+                    : (type === 'slang' ? createSlangPlatform() : createKeycapPlatform());
 
-                if (type === 'wakp') pObj = createWakpPlatform();
-                else if (type === 'slang') pObj = createSlangPlatform();
-                else pObj = createKeycapPlatform();
-
-                if (i === 0) {
-                    posX = 0;
-                    posZ = 0;
-                } else {
-                    // 하드모드 지그재그 난이도
+                if (i > 0) {
                     const dirPattern = i % 4;
                     if (dirPattern === 1) posX += 1.8;
                     else if (dirPattern === 3) posX -= 1.8;
                     posZ -= STEP_DEPTH;
                 }
 
-                // 난이도 속성 부여: 15층 이상부터 이동 및 사라지는 발판 등장
-                const isMoving = i > 12 && (i % 3 === 0);
-                const isDisappearing = i > 18 && (i % 7 === 0);
+                const isMoving = i > 12 && i % 3 === 0;
+                const isDisappearing = i > 18 && i % 7 === 0;
 
                 pObj.position.set(posX, i * STEP_HEIGHT, posZ);
-                pObj.userData = { 
-                    id: i, 
-                    type: type, 
-                    baseX: posX, 
-                    isMoving: isMoving, 
-                    moveSpeed: 1.5 + (i * 0.02), 
+                pObj.userData = {
+                    id: i,
+                    type: type,
+                    baseX: posX,
+                    isMoving: isMoving,
+                    moveSpeed: 1.5 + i * 0.02,
                     isDisappearing: isDisappearing,
                     stepped: false,
-                    vanishTimer: 1.5
+                    vanishTimer: 1.5,
+                    gone: false,
+                    squash: 1,
+                    squashV: 0,
+                    crackHitTime: -99
                 };
-
                 scene.add(pObj);
                 platformObjects.push(pObj);
             }
 
-            camera.position.set(0, 8, 12);
+            const p0 = platformObjects[0];
+            player3D.position.set(p0.position.x, platformTop(p0), p0.position.z);
+            playerVelocity = { x: 0, y: 0, z: 0 };
+            onGround = true;
+            standingOn = p0;
+            lastStandX = p0.position.x;
+            keyState = {};
+
+            camera.position.set(0, 6.5, 11);
             camera.lookAt(0, 1, 0);
 
-            if (animationFrameId) cancelAnimationFrame(animationFrameId);
             clock.start();
             animate3D();
         }
 
-        // 3D 애니메이션 루프
         function animate3D() {
             animationFrameId = requestAnimationFrame(animate3D);
-            const dt = Math.min(clock.getDelta(), 0.1);
-
-            if (!isGateActive && !isGameOver) {
-                update3DPhysics(dt);
-            }
+            const dt = Math.min(clock.getDelta(), 0.05);
 
             updatePlatformAnimations(dt);
+
+            if (gameRunning && !isGateActive && !isGameOver) {
+                update3DPhysics(dt);
+            } else if (standingOn) {
+                lastStandX = standingOn.position.x;
+            }
+
+            updatePlayerPose(dt);
+            updateCamera();
             renderer.render(scene, camera);
         }
 
@@ -773,27 +872,27 @@
             const time = clock.getElapsedTime();
 
             platformObjects.forEach(p => {
-                // 1. 움직이는 발판 업데이트
-                if (p.userData.isMoving) {
-                    const offset = Math.sin(time * p.userData.moveSpeed) * 2.2;
-                    p.position.x = p.userData.baseX + offset;
+                const ud = p.userData;
+
+                if (ud.isMoving) {
+                    p.position.x = ud.baseX + Math.sin(time * ud.moveSpeed) * 2.2;
                 }
 
-                // 2. 사라지는 발판 타이머 및 반짝임 연출
-                if (p.userData.isDisappearing && p.userData.stepped) {
-                    p.userData.vanishTimer -= dt;
-                    p.scale.multiplyScalar(0.98); // 서서히 축소
-                    if (p.userData.vanishTimer <= 0) {
-                        p.position.y = -999; // 화면 밖으로 제거
+                // 사라지는 발판: 밟은 뒤 1.5초 후 사라짐 (마지막 0.6초 동안 깜빡임)
+                if (ud.isDisappearing && ud.stepped && !ud.gone) {
+                    ud.vanishTimer -= dt;
+                    if (ud.vanishTimer <= 0) {
+                        ud.gone = true;
+                        p.visible = false;
+                    } else {
+                        p.visible = ud.vanishTimer > 0.6 || Math.floor(ud.vanishTimer * 10) % 2 === 0;
                     }
                 }
 
-                // 착지 반응 애니메이션
-                if (p.userData.type === 'wakp') {
-                    const crackGroup = p.getObjectByName("crackEffectGroup");
+                if (ud.type === 'wakp') {
+                    const crackGroup = p.getObjectByName('crackEffectGroup');
                     if (crackGroup) {
-                        const hitTime = p.userData.crackHitTime || 0;
-                        if (time - hitTime < 2.0) {
+                        if (time - ud.crackHitTime < 2.0) {
                             crackGroup.children.forEach(line => line.material.opacity = 1.0);
                         } else {
                             crackGroup.children.forEach(line => {
@@ -801,179 +900,214 @@
                             });
                         }
                     }
-                }
+                } else {
+                    // 눌렸다가 튀어나오는 스프링 연출
+                    const acc = -180 * (ud.squash - 1) - 14 * ud.squashV;
+                    ud.squashV += acc * dt;
+                    ud.squash += ud.squashV * dt;
+                    ud.squash = Math.max(0.3, ud.squash);
 
-                if (p.userData.type === 'slang') {
-                    const slangMesh = p.getObjectByName("slangMesh");
-                    if (slangMesh) {
-                        slangMesh.scale.y += (1.0 - slangMesh.scale.y) * 12.0 * dt;
-                    }
+                    const mesh = p.getObjectByName(ud.type === 'slang' ? 'slangMesh' : 'keycapMesh');
+                    if (mesh) mesh.scale.y = ud.squash;
                 }
             });
         }
 
-        // 물리 업데이트 (하드모드 점프 및 바닥 체크)
         function update3DPhysics(dt) {
-            const moveSpeed = 8.5;
-            const jumpForce = 13.0;
-            const gravity = -28.0; // 하드모드 강한 중력
+            const left = keyState['ArrowLeft'] || keyState['Home'] || keyState['KeyA'];
+            const right = keyState['ArrowRight'] || keyState['End'] || keyState['KeyD'];
+            const hopKey = keyState['Space'] || keyState['KeyK'] || keyState['ArrowUp'] ||
+                           keyState['PageUp'] || keyState['KeyW'];
+            const dirX = (right ? 1 : 0) - (left ? 1 : 0);
 
-            let moveX = 0;
-            let moveZ = 0;
+            player3D.userData.walking = false;
 
-            if (keyState['ArrowUp'] || keyState['PageUp'] || keyState['KeyW']) moveZ -= 1;
-            if (keyState['ArrowDown'] || keyState['KeyS']) moveZ += 1;
-            if (keyState['ArrowLeft'] || keyState['Home'] || keyState['KeyA']) moveX -= 1;
-            if (keyState['ArrowRight'] || keyState['End'] || keyState['KeyD']) moveX += 1;
-
-            player3D.position.x += moveX * moveSpeed * dt;
-            player3D.position.z += moveZ * moveSpeed * dt;
-
-            if ((keyState['Space'] || keyState['KeyK']) && onGround) {
-                playerVelocity.y = jumpForce;
-                onGround = false;
-            }
-
-            playerVelocity.y += gravity * dt;
-            player3D.position.y += playerVelocity.y * dt;
-
-            let landed = false;
-
-            for (let p of platformObjects) {
-                if (p.position.y < -500) continue; // 사라진 발판 무시
-
-                const px = p.position.x;
-                const py = p.position.y + 0.4;
-                const pz = p.position.z;
-
-                const dx = Math.abs(player3D.position.x - px);
-                const dz = Math.abs(player3D.position.z - pz);
-
-                // 정교한 판정 (1.8)
-                if (
-                    dx < 1.8 &&
-                    dz < 1.8 &&
-                    player3D.position.y - 0.85 <= py + 0.3 &&
-                    player3D.position.y - 0.85 >= py - 0.7 &&
-                    playerVelocity.y <= 0
-                ) {
-                    player3D.position.y = py + 0.85;
-                    playerVelocity.y = 0;
-                    landed = true;
-
-                    if (!onGround) {
-                        onGround = true;
-                        playStepSound(p.userData.type);
-
-                        if (p.userData.isDisappearing) {
-                            p.userData.stepped = true;
+            if (onGround) {
+                if (hopKey) {
+                    // 점프: 앞(-z)으로 도약, 좌우 키를 함께 누르면 대각선 도약
+                    playerVelocity = { x: dirX * HOP_VX, y: JUMP_VY, z: -HOP_VZ };
+                    onGround = false;
+                    standingOn = null;
+                } else {
+                    if (standingOn) {
+                        // 움직이는 발판 위에서는 발판과 함께 이동
+                        if (standingOn.userData.isMoving) {
+                            player3D.position.x += standingOn.position.x - lastStandX;
                         }
-
-                        if (p.userData.type === 'wakp') {
-                            p.userData.crackHitTime = clock.getElapsedTime();
-                        }
-
-                        if (p.userData.type === 'slang') {
-                            const slangMesh = p.getObjectByName("slangMesh");
-                            if (slangMesh) slangMesh.scale.set(1.2, 0.4, 1.2);
-                        }
-
-                        if (p.userData.id > floorSteps) {
-                            floorSteps = p.userData.id;
-                            document.getElementById('platform-step-count').innerText = floorSteps;
-
-                            if (floorSteps > 0 && floorSteps % 5 === 0 && solvedQuizTotal < 15) {
-                                triggerGateQuiz();
-                            }
-
-                            if (floorSteps === 100 && !victoryTriggered && !isEndlessMode) {
-                                victoryTriggered = true;
-                                playVictorySound();
-                                document.getElementById('modal-victory').classList.remove('hidden');
-                            }
-                        }
+                        lastStandX = standingOn.position.x;
                     }
-                    break;
+                    if (dirX !== 0) {
+                        player3D.position.x += dirX * WALK_SPEED * dt;
+                        player3D.userData.walking = true;
+                    }
+                    if (!standingOn || standingOn.userData.gone ||
+                        !isOverPlatform(standingOn, player3D.position.x, player3D.position.z)) {
+                        // 발판 가장자리를 벗어나면 떨어짐
+                        onGround = false;
+                        standingOn = null;
+                        playerVelocity = { x: 0, y: 0, z: 0 };
+                    } else {
+                        player3D.position.y = platformTop(standingOn);
+                    }
                 }
             }
 
-            if (!landed) {
-                onGround = false;
+            if (!onGround) {
+                const prevY = player3D.position.y;
+                playerVelocity.y += GRAVITY * dt;
+                player3D.position.x += playerVelocity.x * dt;
+                player3D.position.z += playerVelocity.z * dt;
+                player3D.position.y += playerVelocity.y * dt;
+                if (playerVelocity.y <= 0) tryLand(prevY);
             }
 
-            const targetCamPos = new THREE.Vector3(
-                player3D.position.x,
-                player3D.position.y + 7.0,
-                player3D.position.z + 12.0
-            );
-            camera.position.lerp(targetCamPos, 0.12);
-            camera.lookAt(player3D.position.x, player3D.position.y + 0.8, player3D.position.z - 2.0);
-
-            const currentFloorY = floorSteps * STEP_HEIGHT;
-            if (player3D.position.y < currentFloorY - 12.0) {
+            const floorY = floorSteps * STEP_HEIGHT;
+            if (!isGameOver && player3D.position.y < floorY - FALL_MARGIN) {
                 isGameOver = true;
                 document.getElementById('modal-fall').classList.remove('hidden');
             }
         }
 
-        // 퀴즈 및 타이머 핸들링
+        // 떨어지면서 발판 윗면을 지나면 착지
+        function tryLand(prevY) {
+            for (const p of platformObjects) {
+                const ud = p.userData;
+                if (ud.gone) continue;
+                if (!isOverPlatform(p, player3D.position.x, player3D.position.z)) continue;
+                const top = platformTop(p);
+                if (prevY >= top - 0.05 && player3D.position.y <= top + 0.05) {
+                    player3D.position.y = top;
+                    playerVelocity = { x: 0, y: 0, z: 0 };
+                    onGround = true;
+                    standingOn = p;
+                    lastStandX = p.position.x;
+                    onPlatformLanded(p);
+                    return;
+                }
+            }
+        }
+
+        function onPlatformLanded(p) {
+            const ud = p.userData;
+            ud.squash = 0.6;
+            ud.squashV = 0;
+            playStepSound(ud.type);
+
+            if (ud.type === 'wakp') ud.crackHitTime = clock.getElapsedTime();
+            if (ud.isDisappearing) ud.stepped = true;
+
+            if (ud.id > floorSteps) {
+                const prev = floorSteps;
+                floorSteps = ud.id;
+                document.getElementById('platform-step-count').innerText = floorSteps;
+
+                if (floorSteps >= 100 && !victoryTriggered && !isEndlessMode) {
+                    victoryTriggered = true;
+                    isGameOver = true;
+                    playVictorySound();
+                    document.getElementById('modal-victory').classList.remove('hidden');
+                } else if (!isEndlessMode && solvedQuizTotal < 15 &&
+                           Math.floor(floorSteps / 5) > Math.floor(prev / 5)) {
+                    // 5의 배수 층을 넘어서면 관문 퀴즈
+                    triggerGateQuiz();
+                }
+            }
+        }
+
+        function updateCamera() {
+            const px = player3D.position.x;
+            const py = player3D.position.y;
+            const pz = player3D.position.z;
+            camera.position.lerp(new THREE.Vector3(px, py + 6.0, pz + 10.0), 0.12);
+            camera.lookAt(px, py + 1.0, pz - 2.0);
+        }
+
+        // 정답 비교: 공백·문장부호·대소문자 무시, 정답 목록 중 하나와 완전히 같아야 정답
+        function normalizeAnswer(s) {
+            return String(s).toLowerCase().replace(/[\s.,·\-_!?'"()]/g, '');
+        }
+
+        function isSubjectiveCorrect(input, answer) {
+            const user = normalizeAnswer(input);
+            if (!user) return false;
+            const list = Array.isArray(answer) ? answer : [answer];
+            return list.some(a => normalizeAnswer(a) === user);
+        }
+
+        function showFeedback(msg, kind) {
+            const fb = document.getElementById('quiz-feedback');
+            const style = kind === 'ok'
+                ? 'bg-green-100 text-green-700 border-green-300'
+                : 'bg-red-100 text-red-600 border-red-300';
+            fb.className = 'p-2.5 rounded-2xl text-center text-xs font-extrabold mt-2 border ' + style;
+            fb.textContent = msg;
+        }
+
         function triggerGateQuiz() {
             if (solvedQuizTotal >= 15) return;
 
             isGateActive = true;
             isOptionLocked = false;
+            keyState = {};
 
-            const quizList = quizDB[currentSubject];
-            const currentQuiz = quizList[solvedQuizTotal];
-
+            const quiz = quizDB[currentSubject][solvedQuizTotal];
             document.getElementById('quiz-total-index').innerText = solvedQuizTotal + 1;
-            document.getElementById('quiz-question').innerText = currentQuiz.q;
+            document.getElementById('quiz-question').innerText = quiz.q;
 
-            const optionsContainer = document.getElementById('quiz-options');
-            optionsContainer.innerHTML = '';
+            const box = document.getElementById('quiz-options');
+            box.innerHTML = '';
+            document.getElementById('quiz-feedback').classList.add('hidden');
 
-            const feedback = document.getElementById('quiz-feedback');
-            feedback.classList.add('hidden');
-            feedback.className = 'hidden p-2.5 rounded-2xl text-center text-xs font-extrabold mt-2';
+            if (quiz.type === 'subjective') {
+                const wrap = document.createElement('div');
+                wrap.className = 'flex flex-col gap-2 my-2';
 
-            if (currentQuiz.type === 'subjective') {
-                optionsContainer.innerHTML = `
-                    <div class="flex flex-col gap-2 my-2">
-                        <input type="text" id="quiz-subjective-input" placeholder="정답을 입력하세요" 
-                            class="w-full px-4 py-3 border-2 border-pinkMain1 rounded-2xl focus:outline-none focus:border-pinkMain2 text-center font-bold text-gray-800 text-sm shadow-inner">
-                        <button onclick="submitSubjectiveAnswer()" id="btn-submit-answer"
-                            class="w-full py-3 bg-pinkMain2 hover:bg-pinkDark text-white font-black text-sm rounded-2xl shadow-md transition transform active:scale-95">
-                            정답 제출
-                        </button>
-                    </div>
-                `;
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.id = 'quiz-subjective-input';
+                input.placeholder = '정답을 입력하세요';
+                input.autocomplete = 'off';
+                input.className = 'w-full px-4 py-3 border-2 border-pinkMain1 rounded-2xl focus:outline-none focus:border-pinkMain2 text-center font-bold text-gray-800 text-sm shadow-inner';
+                input.addEventListener('keydown', e => {
+                    e.stopPropagation();
+                    if (e.key === 'Enter') submitSubjectiveAnswer();
+                });
+
+                const btn = document.createElement('button');
+                btn.id = 'btn-submit-answer';
+                btn.className = 'w-full py-3 bg-pinkMain2 hover:bg-pinkDark text-white font-black text-sm rounded-2xl shadow-md transition transform active:scale-95';
+                btn.innerText = '정답 제출';
+                btn.onclick = submitSubjectiveAnswer;
+
+                wrap.append(input, btn);
+                box.appendChild(wrap);
+                setTimeout(() => input.focus(), 100);
             } else {
-                currentQuiz.options.forEach((optText, idx) => {
-                    const btn = document.createElement('button');
-                    btn.className = "w-full py-3 px-4 bg-white hover:bg-pinkLight1 border-2 border-pinkMain1/60 rounded-2xl font-bold text-xs sm:text-sm text-gray-700 hover:text-pinkDark text-left transition transform active:scale-98 shadow-sm flex items-center justify-between";
-                    btn.innerHTML = `<span>${optText}</span> <i class="fa-solid fa-chevron-right text-pinkMain1 text-xs"></i>`;
-                    btn.onclick = () => checkQuizAnswer(idx);
-                    optionsContainer.appendChild(btn);
+                quiz.options.forEach((opt, idx) => {
+                    const b = document.createElement('button');
+                    b.className = 'w-full py-3 px-4 bg-white hover:bg-pinkLight1 border-2 border-pinkMain1/60 rounded-2xl font-bold text-xs sm:text-sm text-gray-700 hover:text-pinkDark text-left transition transform active:scale-95 shadow-sm flex items-center justify-between';
+                    const span = document.createElement('span');
+                    span.textContent = opt;
+                    const icon = document.createElement('i');
+                    icon.className = 'fa-solid fa-chevron-right text-pinkMain1 text-xs';
+                    b.append(span, icon);
+                    b.onclick = () => checkQuizAnswer(idx);
+                    box.appendChild(b);
                 });
             }
 
-            startQuizTimer();
             document.getElementById('quiz-post-overlay').classList.remove('hidden');
+            startQuizTimer();
         }
 
         function startQuizTimer() {
             clearQuizTimer();
             quizTimeLeft = 15;
             updateTimerBar();
-
             quizTimerId = setInterval(() => {
-                quizTimeLeft -= 0.1;
+                quizTimeLeft = Math.max(0, quizTimeLeft - 0.1);
                 updateTimerBar();
-
-                if (quizTimeLeft <= 0) {
-                    clearQuizTimer();
-                    handleQuizTimeout();
-                }
+                if (quizTimeLeft <= 0) handleQuizTimeout();
             }, 100);
         }
 
@@ -986,130 +1120,86 @@
 
         function updateTimerBar() {
             const bar = document.getElementById('quiz-timer-bar');
-            if (bar) {
-                const percentage = Math.max(0, (quizTimeLeft / 15) * 100);
-                bar.style.width = percentage + '%';
-            }
+            if (bar) bar.style.width = (quizTimeLeft / 15 * 100) + '%';
         }
 
         function handleQuizTimeout() {
             if (isOptionLocked) return;
-            const feedback = document.getElementById('quiz-feedback');
-            feedback.classList.remove('hidden');
-            feedback.className = 'p-2.5 rounded-2xl text-center text-xs font-extrabold mt-2 bg-red-100 text-red-600 border border-red-300';
-            feedback.innerHTML = '⏰ 제한시간이 초과되었습니다! 다시 정답을 제출해보세요.';
+            clearQuizTimer();
+            showFeedback('⏰ 제한시간이 끝났습니다! 같은 문제를 다시 풀어보세요.', 'bad');
+            setTimeout(() => {
+                if (isGateActive && !isOptionLocked) startQuizTimer();
+            }, 1200);
         }
 
         function checkQuizAnswer(selectedIdx) {
             if (isOptionLocked) return;
-
-            const quizList = quizDB[currentSubject];
-            const currentQuiz = quizList[solvedQuizTotal];
-            const feedback = document.getElementById('quiz-feedback');
-
-            feedback.classList.remove('hidden');
-
-            if (selectedIdx === currentQuiz.answer) {
-                clearQuizTimer();
-                isOptionLocked = true;
-                feedback.className = 'p-2.5 rounded-2xl text-center text-xs font-extrabold mt-2 bg-green-100 text-green-700 border border-green-300';
-                feedback.innerHTML = '⭕ 정답입니다! 다음 구간으로 전진합니다.';
-
-                solvedQuizTotal++;
-                document.getElementById('quiz-solved-count').innerText = solvedQuizTotal;
-
-                setTimeout(() => {
-                    document.getElementById('quiz-post-overlay').classList.add('hidden');
-                    isGateActive = false;
-
-                    if (solvedQuizTotal >= 15) {
-                        showResultScreen();
-                    }
-                }, 1000);
+            const quiz = quizDB[currentSubject][solvedQuizTotal];
+            if (selectedIdx === quiz.answer) {
+                handleCorrect();
             } else {
-                feedback.className = 'p-2.5 rounded-2xl text-center text-xs font-extrabold mt-2 bg-red-100 text-red-600 border border-red-300';
-                feedback.innerHTML = '❌ 오답입니다. 정답을 다시 선택해보세요!';
+                showFeedback('❌ 오답입니다. 정답을 다시 선택해 보세요!', 'bad');
             }
         }
 
         function submitSubjectiveAnswer() {
             if (isOptionLocked) return;
-
-            const inputEl = document.getElementById('quiz-subjective-input');
-            if (!inputEl) return;
-
-            const userAns = inputEl.value.trim().replace(/\s+/g, '').toLowerCase();
-            const quizList = quizDB[currentSubject];
-            const currentQuiz = quizList[solvedQuizTotal];
-            const feedback = document.getElementById('quiz-feedback');
-
-            feedback.classList.remove('hidden');
-            let isCorrect = false;
-
-            if (Array.isArray(currentQuiz.answer)) {
-                isCorrect = currentQuiz.answer.some(ans => {
-                    const cleanAns = ans.trim().replace(/\s+/g, '').toLowerCase();
-                    return userAns.includes(cleanAns) || cleanAns.includes(userAns);
-                });
+            const input = document.getElementById('quiz-subjective-input');
+            if (!input) return;
+            const quiz = quizDB[currentSubject][solvedQuizTotal];
+            if (isSubjectiveCorrect(input.value, quiz.answer)) {
+                handleCorrect();
             } else {
-                const cleanAns = currentQuiz.answer.trim().replace(/\s+/g, '').toLowerCase();
-                isCorrect = userAns.includes(cleanAns) || cleanAns.includes(userAns);
+                showFeedback('❌ 오답입니다. 정답을 다시 입력해 보세요!', 'bad');
             }
+        }
 
-            if (isCorrect && userAns.length > 0) {
-                clearQuizTimer();
-                isOptionLocked = true;
-                feedback.className = 'p-2.5 rounded-2xl text-center text-xs font-extrabold mt-2 bg-green-100 text-green-700 border border-green-300';
-                feedback.innerHTML = '⭕ 정답입니다! 다음 구간으로 전진합니다.';
-
+        function handleCorrect() {
+            isOptionLocked = true;
+            clearQuizTimer();
+            showFeedback('⭕ 정답입니다! 다음 구간으로 전진합니다.', 'ok');
+            setTimeout(() => {
                 solvedQuizTotal++;
                 document.getElementById('quiz-solved-count').innerText = solvedQuizTotal;
-
-                setTimeout(() => {
-                    document.getElementById('quiz-post-overlay').classList.add('hidden');
-                    isGateActive = false;
-
-                    if (solvedQuizTotal >= 15) {
-                        showResultScreen();
-                    }
-                }, 1000);
-            } else {
-                feedback.className = 'p-2.5 rounded-2xl text-center text-xs font-extrabold mt-2 bg-red-100 text-red-600 border border-red-300';
-                feedback.innerHTML = '❌ 오답입니다. 정답을 다시 입력해보세요!';
-            }
+                document.getElementById('quiz-post-overlay').classList.add('hidden');
+                isGateActive = false;
+                isOptionLocked = false;
+                if (solvedQuizTotal >= 15) showResultScreen();
+            }, 1000);
         }
 
         function showResultScreen() {
-            const catBadgeText = currentSubject === 'history' ? '역사' : (currentSubject === 'english' ? '영어' : 'AI');
-            const resCatEl = document.getElementById('result-cat-text');
-            if (resCatEl) resCatEl.innerText = catBadgeText;
-
+            document.getElementById('result-cat-text').innerText = getResultLabel();
             showScreen('screen-result');
         }
 
-        // 리사이즈 처리
         window.addEventListener('resize', () => {
-            if (camera && renderer) {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            }
+            if (!renderer || !camera) return;
+            const c = document.getElementById('game3dContainer');
+            const w = c.clientWidth, h = c.clientHeight;
+            if (!w || !h) return;
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            renderer.setSize(w, h);
         });
 
-        // 키보드 이벤트
-        window.addEventListener('keydown', (e) => {
-            const activeEl = document.activeElement;
-            if (activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA')) {
-                return;
-            }
+        window.addEventListener('keydown', e => {
+            const active = document.activeElement;
+            if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) return;
             keyState[e.code] = true;
             if (['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'PageUp', 'Home', 'End'].includes(e.code)) {
                 e.preventDefault();
             }
         });
 
-        window.addEventListener('keyup', (e) => {
+        window.addEventListener('keyup', e => {
             keyState[e.code] = false;
         });
+
+        // 창을 벗어나면 눌린 키 상태를 초기화 (캐릭터가 혼자 움직이는 현상 방지)
+        window.addEventListener('blur', () => {
+            keyState = {};
+        });
+
     </script>
 
